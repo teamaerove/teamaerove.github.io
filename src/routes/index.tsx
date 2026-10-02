@@ -3,7 +3,7 @@ import { ChevronDown, ChevronLeft, ChevronRight, Instagram, Linkedin, Menu, X } 
 import { useEffect, useRef, useState, type CSSProperties, type ComponentType, type SVGProps } from "react";
 
 import { Drone3D } from "@/components/Drone3D";
-import { IconAero, IconArrowOut, IconChevronUp, IconCrew, IconDroneMark, IconHexCluster, IconLayers, IconLocation, IconMailWing, IconMechatronics, IconMotion, IconPerception, IconRank, IconRecruit, IconTarget, IconTrophy, IconZoom } from "@/components/icons";
+import { IconAero, IconArrowOut, IconBlueprint, IconChevronUp, IconCrew, IconDroneMark, IconHexCluster, IconLayers, IconLocation, IconMailWing, IconMechatronics, IconMotion, IconPerception, IconRank, IconRecruit, IconTarget, IconTrophy, IconZoom } from "@/components/icons";
 import { MicroDrone } from "@/components/MicroDrone";
 import { Button } from "@/components/ui/button";
 import shot1 from "@/assets/aerove-5.png";
@@ -289,6 +289,10 @@ function CountUp({ value, start }: { value: string; start: boolean }) {
   return <>{match[1]}{String(n).padStart(width, "0")}{match[3]}</>;
 }
 
+// Full page load: keeps three.js out of the home bundle and sidesteps a router
+// scroll-restoration bug on client-side transitions between prerendered pages.
+const blueprintHref = `${import.meta.env.BASE_URL}blueprint/`;
+
 const nav = ["about", "architecture", "team", "achievements", "contact"];
 const label = (item: string) => (item === "architecture" ? "System Architecture" : item === "contact" ? "Contact us" : item);
 const stats: [string, string, IconType][] = [["04", "Subsystems", IconHexCluster], ["30+", "Members", IconCrew], ["05", "Global titles", IconTrophy], ["#4", "World rank", IconRank]];
@@ -458,6 +462,11 @@ function Index() {
         <div className="arch-brief reveal">
           <p className="arch-lede">A hex-configured mothership carries a daughter drone to the target zone, holds a stable hover while the daughter launches from its back, and returns home as the daughter completes the mission — every stage computed on board.</p>
           <ol className="mission-steps">{missionSteps.map(([title, text, Icon], i) => <li key={title} className="reveal" style={delay(i * 90)}><span className="mission-icon"><Icon /></span><div><strong><em>0{i + 1}</em>{title}</strong><p>{text}</p></div></li>)}</ol>
+          <a href={blueprintHref} className="blueprint-cta reveal">
+            <span className="blueprint-cta-icon"><IconBlueprint /></span>
+            <span><strong>Open 3D blueprint</strong><small>Inspect 40+ components, fly it, explode the assembly</small></span>
+            <IconArrowOut className="blueprint-cta-arrow" />
+          </a>
         </div>
         <figure className="arch-model reveal"><Drone3D /><figcaption>Live flight model · <span className="on-hover">move your cursor to steer</span><span className="on-touch">drag sideways to steer</span></figcaption></figure>
       </div>
@@ -525,7 +534,7 @@ function Index() {
 
     <footer>
       <a className="wordmark" href="#top" aria-label="AeRoVe home"><img src={aeroveLogo} alt="AeRoVe" /></a>
-      <p>Team AeRoVe · Aerial Robotics Vehicles · UMIC, IIT Bombay</p>
+      <p>Team AeRoVe · Aerial Robotics Vehicles · UMIC, IIT Bombay · <a href={blueprintHref} className="footer-link">3D Blueprint</a></p>
       <div className="footer-connect"><img src={umicLogo} alt="UMIC" /><a href="https://www.instagram.com/umic_iitb/reels/?__d=1%3F%2F" target="_blank" rel="noreferrer" aria-label="UMIC Instagram"><Instagram /></a><a href="https://in.linkedin.com/company/unmesh-mashruwala-innovation-cell-iit-bombay" target="_blank" rel="noreferrer" aria-label="UMIC LinkedIn"><Linkedin /></a></div>
     </footer>
     <section className="closing-motto" aria-label="Our motto"><span>OUR MOTTO</span><p>“A drone is often preferred for missions that are too <em>dull, dirty, or dangerous</em> for manned aircraft.”</p></section>

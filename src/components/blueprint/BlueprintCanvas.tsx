@@ -1,7 +1,7 @@
 import { Suspense, useRef, useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
-import { BlueprintDrone, type Controls, type HoverState } from "./BlueprintDrone";
+import { BlueprintDrone, FloorPlan, type Controls, type HoverState } from "./BlueprintDrone";
 
 function GridFloor() {
   return (
@@ -56,6 +56,9 @@ export function BlueprintCanvas({
       <Suspense fallback={null}>
         <ambientLight intensity={1} />
         <GridFloor />
+        <group position={[0, -0.54, 0]}>
+          <FloorPlan />
+        </group>
         <BlueprintDrone
           controls={controls}
           exploded={exploded}

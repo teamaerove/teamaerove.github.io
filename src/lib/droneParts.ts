@@ -30,6 +30,62 @@ export interface PartInfo {
 
 const RULES: Array<{ keywords: string[]; info: PartInfo }> = [
   {
+    keywords: ["motor phase wire"],
+    info: { label: "Motor phase wires", description: "Three wires carrying switched current from the ESC to the motor windings.", spec: "3 × 16 AWG silicone", group: "wire" },
+  },
+  {
+    keywords: ["power wire"],
+    info: { label: "Power leads", description: "Carry battery current from the PDB to each ESC.", spec: "12 AWG silicone", group: "wire" },
+  },
+  {
+    keywords: ["xt60 connector"],
+    info: { label: "XT60 connector", description: "Main plug joining the battery to the power distribution board.", spec: "60 A continuous", group: "battery" },
+  },
+  {
+    keywords: ["balance lead"],
+    info: { label: "Balance lead", description: "Lets the charger and flight controller read every cell voltage.", spec: "5-pin JST-XH · 4S", group: "wire" },
+  },
+  {
+    keywords: ["plate standoff"],
+    info: { label: "Frame standoff", description: "Spaces the two plates apart and carries load between them.", spec: "M3 · 30 mm aluminium", group: "frame" },
+  },
+  {
+    keywords: ["arm clamp"],
+    info: { label: "Arm clamp", description: "Clamps each carbon arm tube between the frame plates.", spec: "CNC aluminium · M3", group: "frame" },
+  },
+  {
+    keywords: ["arm tube"],
+    info: { label: "Carbon arm tube", description: "Hollow tube carrying motor thrust to the frame and routing wires.", spec: "Ø16 mm · 3K carbon", group: "frame" },
+  },
+  {
+    keywords: ["rc receiver"],
+    info: { label: "RC receiver", description: "Receives pilot stick commands and passes them to the flight controller.", spec: "2.4 GHz · ELRS", group: "antenna" },
+  },
+  {
+    keywords: ["vtx"],
+    info: { label: "Video transmitter", description: "Streams the camera feed to the ground station in real time.", spec: "5.8 GHz · 600 mW", group: "antenna" },
+  },
+  {
+    keywords: ["heatsink"],
+    info: { label: "Heatsink", description: "Pulls heat off the onboard computer so it does not throttle.", spec: "Aluminium · 5 fins", group: "computer" },
+  },
+  {
+    keywords: ["buzzer"],
+    info: { label: "Buzzer", description: "Beeps to signal arming, low battery or to help find a lost drone.", spec: "5 V active · 85 dB", group: "fastener" },
+  },
+  {
+    keywords: ["nav led"],
+    info: { label: "Navigation LED", description: "Shows orientation and arming state from the air.", spec: "WS2812 addressable RGB", group: "fastener" },
+  },
+  {
+    keywords: ["motor mount"],
+    info: { label: "Motor mount", description: "Plate that bolts the motor to the arm tube end.", spec: "CNC 6061 · 4 × M3", group: "frame" },
+  },
+  {
+    keywords: ["prop nut"],
+    info: { label: "Prop nut", description: "Self-tightening nut locking the propeller onto the shaft.", spec: "M5 · nylock", group: "fastener" },
+  },
+  {
     keywords: ["prop", "blade"],
     info: {
       label: "Propeller",

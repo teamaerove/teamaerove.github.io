@@ -151,6 +151,14 @@ export const IconLocation = (p: IconProps) => (
   </Icon>
 );
 
+export const IconBlueprint = (p: IconProps) => (
+  <Icon {...p}>
+    <path d="m24 6 16 9v18l-16 9-16-9V15l16-9Z" />
+    <path d="m8 15 16 9 16-9M24 24v18" />
+    <path d="m16 10.5 16 9M32 10.5l-16 9M16 28.5v9M32 28.5v9" strokeDasharray="2 2.5" opacity=".6" className="ic-flow" />
+  </Icon>
+);
+
 export const IconZoom = (p: IconProps) => (
   <Icon {...p}>
     <path d="M8 18V8h10M30 8h10v10M40 30v10H30M18 40H8V30" />
