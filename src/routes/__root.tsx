@@ -93,7 +93,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Orbitron:wght@600;700;800&display=swap" },
+      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Audiowide&family=Exo+2:wght@400;500;600;700&family=Oxanium:wght@500;600;700;800&family=Share+Tech+Mono&display=swap" },
       { rel: "icon", href: `${import.meta.env.BASE_URL}umic-icon-32.png`, type: "image/png", sizes: "32x32" },
       { rel: "icon", href: `${import.meta.env.BASE_URL}umic-icon-192.png`, type: "image/png", sizes: "192x192" },
       { rel: "apple-touch-icon", href: `${import.meta.env.BASE_URL}umic-icon-180.png` },

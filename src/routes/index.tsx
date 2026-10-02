@@ -3,7 +3,7 @@ import { ChevronDown, ChevronLeft, ChevronRight, Instagram, Linkedin, Menu, X } 
 import { useEffect, useRef, useState, type CSSProperties, type ComponentType, type SVGProps } from "react";
 
 import { Drone3D } from "@/components/Drone3D";
-import { IconAero, IconArrowOut, IconBlueprint, IconChevronUp, IconCrew, IconDroneMark, IconHexCluster, IconLayers, IconLocation, IconMailWing, IconMechatronics, IconMotion, IconPerception, IconRank, IconRecruit, IconTarget, IconTrophy, IconZoom } from "@/components/icons";
+import { IconAero, IconArrowOut, IconBlueprint, IconChevronUp, IconCrew, IconDroneMark, IconHexCluster, IconLayers, IconLocation, IconMailWing, IconMechatronics, IconMotion, IconPerception, IconRank, IconTarget, IconTrophy, IconZoom } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import shot1 from "@/assets/aerove-5.png";
 import shot2 from "@/assets/aerove-3.png";
@@ -244,7 +244,6 @@ const achievements = [
 
 const contactRoutes = [
   { label: "Sponsorship & partnerships", value: "teamaerove@gmail.com", href: "mailto:teamaerove@gmail.com", icon: IconMailWing },
-  { label: "Join the team", value: "Open recruitment each semester", href: "mailto:teamaerove@gmail.com?subject=Joining%20Team%20AeRoVe", icon: IconRecruit },
   { label: "Find us", value: "UMIC, IIT Bombay, Powai, Mumbai 400076", href: "https://maps.google.com/?q=UMIC+IIT+Bombay+Powai", icon: IconLocation },
 ];
 

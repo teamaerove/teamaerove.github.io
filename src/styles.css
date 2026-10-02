@@ -11,7 +11,7 @@
   --color-secondary: var(--secondary); --color-secondary-foreground: var(--secondary-foreground); --color-muted: var(--muted); --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--accent); --color-accent-foreground: var(--accent-foreground); --color-destructive: var(--destructive); --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border); --color-input: var(--input); --color-ring: var(--ring); --color-sky: var(--sky); --color-sky-foreground: var(--sky-foreground);
-  --font-display: "Orbitron", sans-serif; --font-sans: "Manrope", sans-serif;
+  --font-display: "Oxanium", sans-serif; --font-sans: "Exo 2", sans-serif; --font-hero: "Audiowide", sans-serif; --font-mono: "Share Tech Mono", ui-monospace, monospace;
 }
 
 :root {
@@ -407,6 +407,22 @@ footer p:last-child { text-align: right; }
   .js-reveal .reveal:not(.is-visible), .js-reveal .reveal.is-visible { opacity: 1; animation: none; }
   .boot-screen { display: none; } .hero-copy { opacity: 1; animation: none !important; }
 }
+
+/* ===== Tech typography ===== */
+.hero-copy h1, .hero-expansion, .boot-line, .closing-motto p { font-family: var(--font-hero); font-weight: 400; }
+.hero-copy h1 { letter-spacing: .08em; }
+.about-statement h2, .section-intro h2, .subsystem-modal h2 { font-weight: 700; letter-spacing: -.005em; }
+.section-intro h2 { letter-spacing: -.01em; }
+.section-marker span, .section-marker p, .eyebrow, .subsystem-kicker, .subsystem-index, .hero-stats span,
+.hero-slide figcaption, .principles span, .achievement-copy span, .achievement-badge, .contact-card span,
+.tag-row span, .team-group-heading span, .team-filter button span, .mission-steps em, .arch-model figcaption,
+.closing-motto span, footer p, .scroll-cue span, .mobile-nav a span, .modal-step, .lightbox figcaption, .d3-hud {
+  font-family: var(--font-mono); font-weight: 400;
+}
+.section-marker p, .principles span, .contact-card span, .achievement-copy span { letter-spacing: .14em; }
+.nav-links a { font-family: var(--font-display); font-weight: 600; letter-spacing: .14em; }
+.hero-stats strong, .member-info h4, .mission-steps strong, .blueprint-cta strong, .team-group-heading h3 { font-family: var(--font-display); font-weight: 700; }
+.member-info p, .arch-lede, .modal-description, .about-statement > p, .contact-lede p, .mission-steps p { font-family: var(--font-sans); }
 
 /* ===== SVG icon system ===== */
 .aero-icon { display: block; flex: none; overflow: visible; }
