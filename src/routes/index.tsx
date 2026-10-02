@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ChevronDown, ExternalLink, Instagram, Linkedin, Mail, MapPin, Menu, Send, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { ArrowUp, ArrowUpRight, ChevronDown, ChevronLeft, ChevronRight, ExternalLink, Instagram, Linkedin, Mail, MapPin, Maximize2, Menu, Send, X } from "lucide-react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 
 import { MicroDrone } from "@/components/MicroDrone";
 import { Button } from "@/components/ui/button";
@@ -244,10 +244,11 @@ const contactRoutes = [
 
 const enquiryTags = ["Sponsorship", "Technology collaboration", "Campus visit", "Media & press", "Recruitment"];
 
-function Frame({ src, alt, label, compact = false }: { src?: string | null; alt?: string; label: string; compact?: boolean }) {
+function Frame({ src, alt, label, compact = false, onOpen }: { src?: string | null; alt?: string; label: string; compact?: boolean; onOpen?: () => void }) {
+  const img = src ? <img src={src} alt={alt ?? label} loading="lazy" /> : <div className="frame-empty"><span>{label}</span></div>;
   return (
     <div className={`frame ${compact ? "frame-compact" : ""}`}>
-      {src ? <img src={src} alt={alt ?? label} loading="lazy" /> : <div className="frame-empty"><span>{label}</span></div>}
+      {onOpen && src ? <button type="button" className="frame-zoom" onClick={onOpen} aria-label={`Enlarge: ${alt ?? label}`}>{img}<Maximize2 className="frame-zoom-icon" /></button> : img}
       <i className="frame-glow" />
     </div>
   );
@@ -257,50 +258,150 @@ function initials(name: string) {
   return name.split(" ").map((part) => part[0]).join("").slice(0, 2);
 }
 
-/** Split members into rows of at most 3 so leftovers sit centred underneath. */
-function rowsOf3(members: Member[]) {
-  const rows: Member[][] = [];
-  for (let i = 0; i < members.length; i += 3) rows.push(members.slice(i, i + 3));
-  return rows;
+/** Stagger offset for the scroll-reveal animation. */
+const delay = (ms: number) => ({ "--d": `${ms}ms` }) as CSSProperties;
+
+/** Counts a stat like "35+" or "#4" up from zero once it scrolls into view. */
+function CountUp({ value, start }: { value: string; start: boolean }) {
+  const match = value.match(/^(\D*)(\d+)(\D*)$/);
+  const target = match ? Number(match[2]) : 0;
+  const width = match?.[2]?.length ?? 0;
+  const [n, setN] = useState(target);
+  useEffect(() => {
+    if (!start || !match || window.matchMedia("(prefers-reduced-motion: reduce)").matches) { setN(target); return; }
+    let raf = 0; const t0 = performance.now();
+    const tick = (t: number) => {
+      const k = Math.min(1, (t - t0) / 1200);
+      setN(Math.round(target * (1 - Math.pow(1 - k, 3))));
+      if (k < 1) raf = requestAnimationFrame(tick);
+    };
+    setN(0); raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [start]); // eslint-disable-line react-hooks/exhaustive-deps
+  if (!match) return <>{value}</>;
+  return <>{match[1]}{String(n).padStart(width, "0")}{match[3]}</>;
 }
 
+const nav = ["about", "architecture", "team", "achievements", "contact"];
+const label = (item: string) => (item === "architecture" ? "System Architecture" : item === "contact" ? "Contact us" : item);
+const stats = [["04", "Subsystems"], ["35+", "Members"], ["05", "Global titles"], ["#4", "World rank"]] as const;
+
 function Index() {
-  const [active, setActive] = useState<Subsystem | null>(null);
+  const [activeIdx, setActiveIdx] = useState<number | null>(null);
+  const active = activeIdx === null ? null : architecture[activeIdx] ?? null;
+  const [lightbox, setLightbox] = useState<Shot | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [slide, setSlide] = useState(0);
+  const [paused, setPaused] = useState(false);
   const [booted, setBooted] = useState(false);
+  const [skipBoot, setSkipBoot] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [section, setSection] = useState("");
+  const [teamFilter, setTeamFilter] = useState("All");
+  const closeRef = useRef<HTMLButtonElement>(null);
+  const lastFocus = useRef<HTMLElement | null>(null);
 
+  const overlayOpen = !!active || !!lightbox || menuOpen;
+
+  // Lock page scroll behind the modal, lightbox and mobile menu.
   useEffect(() => {
-    document.body.style.overflow = active ? "hidden" : "";
+    document.body.style.overflow = overlayOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
-  }, [active]);
+  }, [overlayOpen]);
 
+  // Boot intro plays once per browser session.
   useEffect(() => {
-    const boot = window.setTimeout(() => setBooted(true), 1700);
-    const loop = window.setInterval(() => setSlide((s) => (s + 1) % slides.length), 3000);
-    return () => { window.clearTimeout(boot); window.clearInterval(loop); };
+    let seen = false;
+    try { seen = sessionStorage.getItem("aerove-booted") === "1"; sessionStorage.setItem("aerove-booted", "1"); } catch { /* storage unavailable */ }
+    if (seen) { setSkipBoot(true); setBooted(true); return; }
+    const boot = window.setTimeout(() => setBooted(true), 1000);
+    return () => window.clearTimeout(boot);
   }, []);
 
-  const nav = ["about", "architecture", "team", "achievements", "contact"];
-  const label = (item: string) => (item === "architecture" ? "System Architecture" : item === "contact" ? "Contact us" : item);
+  // Slideshow pauses on hover and while the tab is hidden.
+  useEffect(() => {
+    if (paused) return;
+    const loop = window.setInterval(() => { if (!document.hidden) setSlide((s) => (s + 1) % slides.length); }, 5000);
+    return () => window.clearInterval(loop);
+  }, [paused]);
+
+  // Nav state, reading progress and back-to-top.
+  useEffect(() => {
+    const onScroll = () => {
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      setScrolled(window.scrollY > 24);
+      setProgress(max > 0 ? window.scrollY / max : 0);
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // Highlight the nav link of the section in view.
+  useEffect(() => {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => { if (e.isIntersecting) setSection(e.target.id); });
+    }, { rootMargin: "-45% 0px -50% 0px" });
+    nav.forEach((id) => { const el = document.getElementById(id); if (el) io.observe(el); });
+    return () => io.disconnect();
+  }, []);
+
+  // Fade elements in as they scroll into view; content stays visible without JS.
+  useEffect(() => {
+    document.documentElement.classList.add("js-reveal");
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("is-visible"); io.unobserve(e.target); } });
+    }, { rootMargin: "0px 0px -8% 0px", threshold: 0.08 });
+    document.querySelectorAll(".reveal:not(.is-visible)").forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, [teamFilter]);
+
+  // Keyboard: Esc closes overlays, arrows step through subsystems / slides.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") { if (lightbox) setLightbox(null); else if (active) setActiveIdx(null); else setMenuOpen(false); return; }
+      if (lightbox) return;
+      if (activeIdx !== null && (e.key === "ArrowRight" || e.key === "ArrowLeft")) {
+        const d = e.key === "ArrowRight" ? 1 : -1;
+        setActiveIdx((i) => (i === null ? i : (i + d + architecture.length) % architecture.length));
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [activeIdx, active, lightbox]);
+
+  // Move focus into the dialog, and back to the trigger when it closes.
+  useEffect(() => {
+    if (active) { if (!lastFocus.current) lastFocus.current = document.activeElement as HTMLElement; closeRef.current?.focus(); }
+    else if (lastFocus.current) { lastFocus.current.focus(); lastFocus.current = null; }
+  }, [active]);
+
+  const step = (d: number) => setActiveIdx((i) => (i === null ? i : (i + d + architecture.length) % architecture.length));
+  const teamTabs = ["All", ...groups.map((g) => g.title)];
+  const shownGroups = teamFilter === "All" ? groups : groups.filter((g) => g.title === teamFilter);
 
   return <main className="site-shell">
+    <a className="skip-link" href="#about">Skip to content</a>
     <MicroDrone />
 
-    <nav className="site-nav">
+    <nav className={`site-nav ${scrolled ? "is-scrolled" : ""}`} aria-label="Primary">
       <div className="nav-brands"><a href="#top" aria-label="UMIC home"><img className="nav-umic" src={umicLogo} alt="UMIC" /></a><a className="wordmark" href="#top" aria-label="Team AeRoVe home"><img src={aeroveLogo} alt="AeRoVe" /></a></div>
-      <div className="nav-links">{nav.map((item) => <a key={item} href={`#${item}`}>{label(item)}</a>)}</div>
+      <div className="nav-links">{nav.map((item) => <a key={item} href={`#${item}`} className={section === item ? "is-current" : ""} aria-current={section === item ? "location" : undefined}>{label(item)}</a>)}</div>
       <img className="nav-iitb" src={iitbLogo} alt="IIT Bombay" />
-      <Button variant="ghost" size="icon" className="menu-button" aria-label="Toggle navigation" onClick={() => setMenuOpen(!menuOpen)}>{menuOpen ? <X /> : <Menu />}</Button>
-      {menuOpen && <div className="mobile-nav">{nav.map((item) => <a key={item} href={`#${item}`} onClick={() => setMenuOpen(false)}>{label(item)}</a>)}</div>}
+      <Button variant="ghost" size="icon" className="menu-button" aria-label={menuOpen ? "Close navigation" : "Open navigation"} aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}>{menuOpen ? <X /> : <Menu />}</Button>
+      <span className="nav-progress" style={{ transform: `scaleX(${progress})` }} aria-hidden="true" />
     </nav>
+    <div className={`mobile-nav ${menuOpen ? "is-open" : ""}`} aria-hidden={!menuOpen}>
+      {nav.map((item, i) => <a key={item} href={`#${item}`} tabIndex={menuOpen ? 0 : -1} style={{ transitionDelay: menuOpen ? `${80 + i * 50}ms` : "0ms" }} className={section === item ? "is-current" : ""} onClick={() => setMenuOpen(false)}><span>0{i + 1}</span>{label(item)}</a>)}
+    </div>
 
-    <header id="top" className={`hero-section ${booted ? "is-booted" : ""}`}>
+    <header id="top" className={`hero-section ${booted ? "is-booted" : ""} ${skipBoot ? "skip-boot" : ""}`} onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
       <div className="hero-stage">
         <div className="hero-slides">
           {slides.map((s, i) => (
             <figure key={s.src} className={`hero-slide ${i === slide ? "is-active" : ""}`} aria-hidden={i === slide ? undefined : true}>
-              <img src={s.src} alt={s.alt} />
+              <img src={s.src} alt={s.alt} fetchPriority={i === 0 ? "high" : undefined} />
               <figcaption>{s.caption}</figcaption>
             </figure>
           ))}
@@ -318,71 +419,73 @@ function Index() {
         <p className="hero-expansion">AERIAL ROBOTICS VEHICLES</p>
       </div>
 
-      <div className="hero-dots">{slides.map((s, i) => <Button key={s.src} variant="ghost" size="icon" className={i === slide ? "is-on" : ""} onClick={() => setSlide(i)} aria-label={`Show photo ${i + 1}`} />)}</div>
+      <div className="hero-dots">{slides.map((s, i) => <Button key={s.src} variant="ghost" size="icon" className={i === slide ? "is-on" : ""} onClick={() => setSlide(i)} aria-label={`Show photo ${i + 1}`} aria-pressed={i === slide} />)}</div>
 
-      <div className="hero-stats">{[["04","Subsystems"],["35+","Members"],["05","Global titles"],["#4","World rank"]].map(([n,l]) => <div key={l}><strong>{n}</strong><span>{l}</span></div>)}</div>
+      <div className="hero-stats">{stats.map(([n, l]) => <div key={l}><strong><CountUp value={n} start={booted} /></strong><span>{l}</span></div>)}</div>
       <a className="scroll-cue" href="#about"><ChevronDown /><span>Explore</span></a>
     </header>
 
     <section id="about" className="about-section">
-      <div className="section-marker"><span>01</span><p>Our moto</p></div>
-      <div className="about-statement">
+      <div className="section-marker reveal"><span>01</span><p>Our motto</p></div>
+      <div className="about-statement reveal">
         <h2>“A drone is often preferred for missions that are too <em>dull, dirty, or dangerous</em> for manned aircraft.”</h2>
         <p>Team AeRoVe of UMIC is on a never-ending pursuit of developing an ultimate system of autonomous fixed-wing as well as multirotor aircraft. Incorporating Mechatronics, Aerodynamics, Motion Path &amp; Controlling, Machine Learning and Perception, the team covers every aspect of a complete autonomous aerial vehicle.</p>
         <p>Our purpose is to push the boundaries of autonomous aerial technology and build cutting-edge systems through indigenous innovation — long-distance outdoor navigation, manipulation of large objects, interaction with moving frames of reference and 100% onboard computation.</p>
       </div>
-      <div className="about-visual"><Frame src={roboCollage} alt="RoboDrive 2024 team, aircraft, award ceremony and engineering work" label="Team AeRoVe at RoboDrive" /></div>
-      <div className="principles">
+      <div className="about-visual reveal"><Frame src={roboCollage} alt="RoboDrive 2024 team, aircraft, award ceremony and engineering work" label="Team AeRoVe at RoboDrive" onOpen={() => setLightbox({ src: roboCollage, alt: "RoboDrive 2024 team, aircraft, award ceremony and engineering work" })} /></div>
+      <div className="principles reveal">
         <article><span>Mission</span><h3>Indigenous systems for fully autonomous flight.</h3></article>
         <article><span>Approach</span><h3>Mechanics, airflow, control and vision as one aircraft.</h3></article>
       </div>
     </section>
 
     <section id="architecture" className="work-section">
-      <div className="section-intro light"><div className="section-marker"><span>02</span><p>System architecture</p></div><h2>The what and how<br/>of the entire system.</h2></div>
-      <p className="arch-lede">A hex-configured mothership carries a daughter drone to the target zone, holds a stable hover while the daughter launches from its back, and returns home as the daughter completes the mission — every stage computed on board.</p>
+      <div className="section-intro light reveal"><div className="section-marker"><span>02</span><p>System architecture</p></div><h2>The what and how<br/>of the entire system.</h2></div>
+      <p className="arch-lede reveal">A hex-configured mothership carries a daughter drone to the target zone, holds a stable hover while the daughter launches from its back, and returns home as the daughter completes the mission — every stage computed on board.</p>
       <div className="subsystem-grid">{architecture.map((s, i) => (
-        <Button variant="ghost" className="subsystem-card" key={s.name} onClick={() => setActive(s)} aria-label={`Open ${s.name} details`}>
+        <Button variant="ghost" className="subsystem-card reveal" style={delay(i * 70)} key={s.name} onClick={() => setActiveIdx(i)} aria-label={`Open ${s.name} details`} aria-haspopup="dialog">
           {s.gallery[0] && <Frame src={s.gallery[0].src} alt={s.gallery[0].alt} label={s.name} />}
           <span className="subsystem-index">0{i + 1}</span>
-          <h3>{s.name}</h3>
+          <span className="subsystem-copy"><span className="subsystem-kicker">{s.kicker}</span><h3>{s.name}</h3></span>
           <ExternalLink className="card-arrow" />
         </Button>
       ))}</div>
     </section>
 
     <section id="team" className="team-section">
-      <div className="section-intro light"><div className="section-marker"><span>03</span><p>The people</p></div><h2>35+ minds.<br/>One airspace.</h2></div>
-      {groups.map((group) => <div className="team-group" key={group.title}>
+      <div className="section-intro light reveal"><div className="section-marker"><span>03</span><p>The people</p></div><h2>35+ minds.<br/>One airspace.</h2></div>
+      <div className="team-filter reveal" role="tablist" aria-label="Filter team by group">
+        {teamTabs.map((t) => <button key={t} type="button" role="tab" aria-selected={teamFilter === t} className={teamFilter === t ? "is-on" : ""} onClick={() => setTeamFilter(t)}>{t}<span>{t === "All" ? groups.reduce((n, g) => n + g.members.length, 0) : groups.find((g) => g.title === t)?.members.length}</span></button>)}
+      </div>
+      {shownGroups.map((group) => <div className="team-group" key={group.title}>
         <div className="team-group-heading"><h3>{group.title}</h3><span>{String(group.members.length).padStart(2,"0")}</span></div>
-        <div className="team-rows">{rowsOf3(group.members).map((row, ri) => (
-          <div className="team-row" key={ri}>{row.map((m) => <article className="member-card" key={m.name}>
-            <div className="member-photo">{photoFor(m.name) ? <img src={photoFor(m.name)} alt={m.name} loading="lazy" /> : <span>{initials(m.name)}</span>}</div>
-            <div className="member-info">
-              <h4>{m.name}</h4>
-              <p>{m.role}</p>
-              <div className="socials">
-                {m.instagram && <a href={m.instagram} target="_blank" rel="noreferrer" aria-label={`${m.name} on Instagram`}><Instagram /></a>}
-                {m.linkedin && <a href={m.linkedin} target="_blank" rel="noreferrer" aria-label={`${m.name} on LinkedIn`}><Linkedin /></a>}
-              </div>
+        <div className="team-row">{group.members.map((m, mi) => <article className="member-card reveal" style={delay((mi % 4) * 60)} key={m.name}>
+          <div className="member-photo">{photoFor(m.name) ? <img src={photoFor(m.name)} alt={m.name} loading="lazy" /> : <span>{initials(m.name)}</span>}</div>
+          <div className="member-info">
+            <h4>{m.name}</h4>
+            <p>{m.role}</p>
+            <div className="socials">
+              {m.instagram && <a href={m.instagram} target="_blank" rel="noreferrer" aria-label={`${m.name} on Instagram`}><Instagram /></a>}
+              {m.linkedin && <a href={m.linkedin} target="_blank" rel="noreferrer" aria-label={`${m.name} on LinkedIn`}><Linkedin /></a>}
             </div>
-          </article>)}</div>
-        ))}</div>
+          </div>
+        </article>)}</div>
       </div>)}
     </section>
 
     <section id="achievements" className="achievements-section">
-      <div className="section-intro light"><div className="section-marker"><span>04</span><p>World stage</p></div><h2>Proven in<br/>competition.</h2></div>
-      <div className="achievement-grid">{achievements.map((a, i) => <article className={`achievement-card achievement-${i + 1}`} key={a.title}>
-        <Frame src={a.photo} alt={`${a.title} team and achievement`} label={a.title} />
+      <div className="section-intro light reveal"><div className="section-marker"><span>04</span><p>World stage</p></div><h2>Proven in<br/>competition.</h2></div>
+      <div className="achievement-grid">{achievements.map((a, i) => <article className={`achievement-card achievement-${i + 1} reveal`} style={delay(i * 70)} key={a.title}>
+        <Frame src={a.photo} alt={`${a.title} team and achievement`} label={a.title} onOpen={() => setLightbox({ src: a.photo, alt: `${a.title} — ${a.rank}, ${a.detail}` })} />
+        <span className="achievement-badge" aria-hidden="true">{a.badge}</span>
         <div className="achievement-copy"><span>{a.rank}</span><h3>{a.title}</h3><p>{a.detail}</p></div>
       </article>)}</div>
     </section>
 
     <section id="contact" className="contact-section">
-      <div className="section-intro light"><div className="section-marker"><span>05</span><p>Contact us</p></div><h2>Let&rsquo;s build<br/>what flies next.</h2></div>
+      <div className="section-intro light reveal"><div className="section-marker"><span>05</span><p>Contact us</p></div><h2>Let&rsquo;s build<br/>what flies next.</h2></div>
       <div className="contact-layout">
-        <div className="contact-lede">
+        <div className="contact-lede reveal">
           <p>Sponsors, research groups, companies and students — every aircraft we fly starts with a conversation. Reach the team directly and we reply within a couple of days.</p>
           <div className="tag-row">{enquiryTags.map((tag) => <span key={tag}>{tag}</span>)}</div>
           <div className="contact-socials">
@@ -390,10 +493,11 @@ function Index() {
             <a href="https://in.linkedin.com/company/unmesh-mashruwala-innovation-cell-iit-bombay" target="_blank" rel="noreferrer" aria-label="UMIC on LinkedIn"><Linkedin /></a>
           </div>
         </div>
-        <div className="contact-cards">{contactRoutes.map(({ label: l, value, href, icon: Icon }) => (
-          <a className="contact-card" key={l} href={href} target={href.startsWith("http") ? "_blank" : undefined} rel="noreferrer">
+        <div className="contact-cards">{contactRoutes.map(({ label: l, value, href, icon: Icon }, i) => (
+          <a className="contact-card reveal" style={delay(i * 70)} key={l} href={href} target={href.startsWith("http") ? "_blank" : undefined} rel="noreferrer">
             <Icon />
             <div><span>{l}</span><strong>{value}</strong></div>
+            <ArrowUpRight className="contact-card-arrow" />
           </a>
         ))}</div>
       </div>
@@ -406,15 +510,26 @@ function Index() {
     </footer>
     <section className="closing-motto" aria-label="Our motto"><span>OUR MOTTO</span><p>“A drone is often preferred for missions that are too <em>dull, dirty, or dangerous</em> for manned aircraft.”</p></section>
 
-    {active && <div className="modal-backdrop" role="presentation" onMouseDown={(e) => { if (e.currentTarget === e.target) setActive(null); }}>
-      <div className="subsystem-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-        <Button variant="ghost" size="icon" className="modal-close" onClick={() => setActive(null)} aria-label="Close details"><X /></Button>
-        <p className="eyebrow">{active.kicker}</p>
+    <a className={`back-to-top ${progress > 0.12 ? "is-shown" : ""}`} href="#top" aria-label="Back to top" tabIndex={progress > 0.12 ? 0 : -1}><ArrowUp /></a>
+
+    {active && activeIdx !== null && <div className="modal-backdrop" role="presentation" onMouseDown={(e) => { if (e.currentTarget === e.target) setActiveIdx(null); }}>
+      <div className="subsystem-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" key={active.name}>
+        <Button ref={closeRef} variant="ghost" size="icon" className="modal-close" onClick={() => setActiveIdx(null)} aria-label="Close details"><X /></Button>
+        <p className="eyebrow">0{activeIdx + 1} / 0{architecture.length} · {active.kicker}</p>
         <h2 id="modal-title">{active.name}</h2>
-        <div className="modal-gallery">{active.gallery.map((g) => <Frame key={g.src} src={g.src} alt={g.alt} label="Gallery" compact />)}</div>
+        <div className="modal-gallery">{active.gallery.map((g) => <Frame key={g.src} src={g.src} alt={g.alt} label="Gallery" compact onOpen={() => setLightbox(g)} />)}</div>
         <p className="modal-description">{active.description}</p>
         <div className="tag-row">{active.tags.map(tag => <span key={tag}>{tag}</span>)}</div>
+        <div className="modal-pager">
+          <Button variant="ghost" className="modal-step" onClick={() => step(-1)}><ChevronLeft />{architecture[(activeIdx - 1 + architecture.length) % architecture.length]?.name}</Button>
+          <Button variant="ghost" className="modal-step" onClick={() => step(1)}>{architecture[(activeIdx + 1) % architecture.length]?.name}<ChevronRight /></Button>
+        </div>
       </div>
+    </div>}
+
+    {lightbox && <div className="lightbox" role="dialog" aria-modal="true" aria-label={lightbox.alt} onMouseDown={(e) => { if (e.currentTarget === e.target) setLightbox(null); }}>
+      <Button variant="ghost" size="icon" className="lightbox-close" onClick={() => setLightbox(null)} aria-label="Close image" autoFocus><X /></Button>
+      <figure><img src={lightbox.src} alt={lightbox.alt} /><figcaption>{lightbox.alt}</figcaption></figure>
     </div>}
   </main>;
 }
