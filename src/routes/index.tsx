@@ -4,7 +4,6 @@ import { useEffect, useRef, useState, type CSSProperties, type ComponentType, ty
 
 import { Drone3D } from "@/components/Drone3D";
 import { IconAero, IconArrowOut, IconBlueprint, IconChevronUp, IconCrew, IconDroneMark, IconHexCluster, IconLayers, IconLocation, IconMailWing, IconMechatronics, IconMotion, IconPerception, IconRank, IconRecruit, IconTarget, IconTrophy, IconZoom } from "@/components/icons";
-import { MicroDrone } from "@/components/MicroDrone";
 import { Button } from "@/components/ui/button";
 import shot1 from "@/assets/aerove-5.png";
 import shot2 from "@/assets/aerove-3.png";
@@ -217,14 +216,14 @@ const groups: { title: string; members: Member[] }[] = [
     { name: "Abha", role: "Motion Path & Controlling", instagram: "https://www.instagram.com/abhas_2007/", linkedin: "https://www.linkedin.com/in/abha-shelke-835430390/" },
     { name: "Cheriyan", role: "Perception", linkedin: "https://www.linkedin.com/in/cheriyanr200779" }, { name: "Vidit", role: "Perception", linkedin: "https://www.linkedin.com/in/vidit-nagpurkar/" },
     { name: "Devangi", role: "Aerodynamics", instagram: "https://www.instagram.com/devi.lilvelcro", linkedin: "https://www.linkedin.com/in/devangi-chaudhuri-0a584b242/" },
-    { name: "Afnan Ahmed", role: "Phase 2", instagram: "https://www.instagram.com/afnanahmed450", linkedin: "https://www.linkedin.com/in/afnan-ahmed-449680374" },
-    { name: "Tathagata", role: "Phase 2", linkedin: "https://www.linkedin.com/in/tathagata-roy-0a1b1a20a" },
-    { name: "Bhavya Patel", role: "Phase 2", instagram: "https://www.instagram.com/_.bhavya.patel_", linkedin: "https://www.linkedin.com/in/bhavya-patel-64014b377/" },
-    { name: "Shreeya", role: "Phase 2", instagram: "https://www.instagram.com/nair_shreeya/", linkedin: "https://www.linkedin.com/in/shreeya-nair-780a63417" },
-    { name: "Parth Rane", role: "Phase 2", instagram: "https://www.instagram.com/parthrane4/", linkedin: "https://www.linkedin.com/in/parth-rane-982622372/" },
-    { name: "Raunak Raj", role: "Phase 2", instagram: "https://www.instagram.com/__newton_raunak", linkedin: "https://www.linkedin.com/in/raunak-raj-89888a313" },
-    { name: "Gaurav", role: "Phase 2", instagram: "https://www.instagram.com/gaurav.m_08/", linkedin: "https://www.linkedin.com/in/gaurav-maharana-377453418" },
-    { name: "Parth Lohiya", role: "Phase 2", instagram: "https://www.instagram.com/lohiya_parth/", linkedin: "https://www.linkedin.com/in/parthlohiya" },
+    { name: "Afnan Ahmed", role: "Perception", instagram: "https://www.instagram.com/afnanahmed450", linkedin: "https://www.linkedin.com/in/afnan-ahmed-449680374" },
+    { name: "Tathagata", role: "Motion Path & Controlling", linkedin: "https://www.linkedin.com/in/tathagata-roy-0a1b1a20a" },
+    { name: "Bhavya Patel", role: "Perception", instagram: "https://www.instagram.com/_.bhavya.patel_", linkedin: "https://www.linkedin.com/in/bhavya-patel-64014b377/" },
+    { name: "Shreeya", role: "Motion Path & Controlling", instagram: "https://www.instagram.com/nair_shreeya/", linkedin: "https://www.linkedin.com/in/shreeya-nair-780a63417" },
+    { name: "Parth Rane", role: "Junior Engineer", instagram: "https://www.instagram.com/parthrane4/", linkedin: "https://www.linkedin.com/in/parth-rane-982622372/" },
+    { name: "Raunak Raj", role: "Perception", instagram: "https://www.instagram.com/__newton_raunak", linkedin: "https://www.linkedin.com/in/raunak-raj-89888a313" },
+    { name: "Gaurav", role: "Junior Engineer", instagram: "https://www.instagram.com/gaurav.m_08/", linkedin: "https://www.linkedin.com/in/gaurav-maharana-377453418" },
+    { name: "Parth Lohiya", role: "Motion Path & Controlling", instagram: "https://www.instagram.com/lohiya_parth/", linkedin: "https://www.linkedin.com/in/parthlohiya" },
   ]},
   { title: "Business Team", members: [
     { name: "Satyam", role: "Finance & Logistics", instagram: "https://www.instagram.com/satyamyeola/", linkedin: "https://www.linkedin.com/in/satyamyeola/" },
@@ -244,8 +243,8 @@ const achievements = [
 ];
 
 const contactRoutes = [
-  { label: "Sponsorship & partnerships", value: "aerove@umic.iitb.ac.in", href: "mailto:aerove@umic.iitb.ac.in", icon: IconMailWing },
-  { label: "Join the team", value: "Open recruitment each semester", href: "mailto:aerove@umic.iitb.ac.in?subject=Joining%20Team%20AeRoVe", icon: IconRecruit },
+  { label: "Sponsorship & partnerships", value: "teamaerove@gmail.com", href: "mailto:teamaerove@gmail.com", icon: IconMailWing },
+  { label: "Join the team", value: "Open recruitment each semester", href: "mailto:teamaerove@gmail.com?subject=Joining%20Team%20AeRoVe", icon: IconRecruit },
   { label: "Find us", value: "UMIC, IIT Bombay, Powai, Mumbai 400076", href: "https://maps.google.com/?q=UMIC+IIT+Bombay+Powai", icon: IconLocation },
 ];
 
@@ -400,7 +399,6 @@ function Index() {
 
   return <main className="site-shell">
     <a className="skip-link" href="#about">Skip to content</a>
-    <MicroDrone />
 
     <nav className={`site-nav ${scrolled ? "is-scrolled" : ""}`} aria-label="Primary">
       <div className="nav-brands"><a href="#top" aria-label="UMIC home"><img className="nav-umic" src={umicLogo} alt="UMIC" /></a><a className="wordmark" href="#top" aria-label="Team AeRoVe home"><img src={aeroveLogo} alt="AeRoVe" /></a></div>

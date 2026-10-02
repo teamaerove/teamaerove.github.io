@@ -42,16 +42,6 @@ button, a { -webkit-tap-highlight-color: transparent; }
 button { font: inherit; }
 .site-shell { min-height: 100vh; background: var(--navy); }
 
-/* cursor drone -------------------------------------------------- */
-.micro-drone { position: fixed; z-index: 90; top: 0; left: 0; width: 88px; pointer-events: none; opacity: 0; color: var(--electric); transition: opacity .6s ease; filter: drop-shadow(0 0 10px oklch(.79 .14 217 / .8)); animation: md-hover 2.6s ease-in-out infinite; }
-.micro-drone svg { width: 100%; overflow: visible; }
-.md-rotor { stroke-dasharray: 9 6; animation: md-spin .8s linear infinite; }
-.md-rev { animation-direction: reverse; }
-.md-eye { fill: var(--electric); stroke: none; animation: md-blink 1.8s ease-in-out infinite; }
-@keyframes md-spin { to { stroke-dashoffset: 30 } }
-@keyframes md-blink { 50% { opacity: .25 } }
-@keyframes md-hover { 50% { translate: 0 -6px } }
-
 /* nav ----------------------------------------------------------- */
 .site-nav { position: fixed; inset: 0 0 auto; z-index: 50; height: 68px; display: flex; align-items: center; justify-content: space-between; padding: 0 clamp(1.25rem, 4vw, 4.5rem); color: var(--cloud); background: color-mix(in oklab, var(--ink) 78%, transparent); border-bottom: 1px solid var(--line-light); backdrop-filter: blur(16px); }
 .wordmark { font-family: var(--font-display); font-size: 1rem; font-weight: 800; letter-spacing: .18em; color: inherit; text-decoration: none; }
@@ -241,7 +231,7 @@ footer p:last-child { text-align: right; }
   .modal-gallery { grid-template-columns: 1fr 1fr; height: auto; } .modal-gallery > *:first-child { grid-column: 1/3; }
   footer { grid-template-columns: 1fr; text-align: center; } footer p:last-child { text-align: center; }
 }
-@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto } .micro-drone, .md-rotor, .scroll-cue svg, .boot-line { animation: none !important } * { transition-duration: .01ms !important } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto } .scroll-cue svg, .boot-line { animation: none !important } * { transition-duration: .01ms !important } }
 
 /* Alternating light sections and picture-led content */
 :root { --day: oklch(.985 .008 220); --day-ink: oklch(.22 .055 250); --day-muted: oklch(.43 .045 245); --day-blue: oklch(.49 .14 235); --day-line: oklch(.74 .07 225); }

@@ -3,6 +3,7 @@ import { useFrame, type ThreeEvent } from "@react-three/fiber";
 import { Html } from "@react-three/drei";
 import * as THREE from "three";
 import { MOTORS, getPartInfo, type PartInfo } from "@/lib/droneParts";
+import { partGeometry } from "./partGeometry";
 
 export const BLUE = "#1d4ed8";
 export const BLUE_LIGHT = "#5f8cf0";
@@ -134,7 +135,13 @@ export function DashedLine({
 }) {
   const obj = useMemo(() => {
     const g = new THREE.BufferGeometry().setFromPoints(points.map((p) => new THREE.Vector3(...p)));
-    const m = new THREE.LineDashedMaterial({ color, dashSize: dash, gapSize: gap, transparent: true, opacity });
+    const m = new THREE.LineDashedMaterial({
+      color,
+      dashSize: dash,
+      gapSize: gap,
+      transparent: true,
+      opacity,
+    });
     const l = loop ? new THREE.LineLoop(g, m) : new THREE.Line(g, m);
     l.computeLineDistances();
     l.raycast = () => {};
@@ -143,14 +150,25 @@ export function DashedLine({
   return <primitive object={obj} />;
 }
 
-function Ring({ r, y = 0, ...rest }: { r: number; y?: number; color?: string; dash?: number; gap?: number; opacity?: number }) {
+function Ring({
+  r,
+  y = 0,
+  ...rest
+}: {
+  r: number;
+  y?: number;
+  color?: string;
+  dash?: number;
+  gap?: number;
+  opacity?: number;
+}) {
   const pts = useMemo(
     () =>
       Array.from({ length: 72 }, (_, i) => {
         const a = (i / 72) * Math.PI * 2;
         return [Math.cos(a) * r, y, Math.sin(a) * r] as V3;
       }),
-    [r, y]
+    [r, y],
   );
   return <DashedLine points={pts} loop {...rest} />;
 }
@@ -167,9 +185,15 @@ function Wire({
   setHovered: SetHover;
   hitR?: number;
 }) {
-  const curves = useMemo(() => paths.map((p) => new THREE.CatmullRomCurve3(p.map((v) => new THREE.Vector3(...v)))), [paths]);
+  const curves = useMemo(
+    () => paths.map((p) => new THREE.CatmullRomCurve3(p.map((v) => new THREE.Vector3(...v)))),
+    [paths],
+  );
   const hit = useMemo(() => new THREE.TubeGeometry(curves[0]!, 20, hitR, 5, false), [curves, hitR]);
-  const lines = useMemo(() => curves.map((c) => c.getPoints(24).map((v) => [v.x, v.y, v.z] as V3)), [curves]);
+  const lines = useMemo(
+    () => curves.map((c) => c.getPoints(24).map((v) => [v.x, v.y, v.z] as V3)),
+    [curves],
+  );
   return (
     <Part name={name} setHovered={setHovered}>
       <WireBody hit={hit} lines={lines} />
@@ -185,7 +209,14 @@ function WireBody({ hit, lines }: { hit: THREE.BufferGeometry; lines: V3[][] }) 
         <meshBasicMaterial transparent opacity={0} depthWrite={false} />
       </mesh>
       {lines.map((l, i) => (
-        <DashedLine key={i} points={l} color={hot ? HOT : BLUE_LIGHT} dash={0.016} gap={0.01} opacity={1} />
+        <DashedLine
+          key={i}
+          points={l}
+          color={hot ? HOT : BLUE_LIGHT}
+          dash={0.016}
+          gap={0.01}
+          opacity={1}
+        />
       ))}
     </>
   );
@@ -196,22 +227,74 @@ function WireBody({ hit, lines }: { hit: THREE.BufferGeometry; lines: V3[][] }) 
 const ARM_R = 0.877; // radial motor distance (motors sit at ±0.62, ±0.62)
 const MP = 0.62;
 
-const POWER_PATHS: V3[][] = [[[0.1, 0, 0.015], [0.22, 0.02, 0.02], [0.37, 0.04, 0.015]]];
-const PHASE_PATHS: V3[][] = [-0.02, 0, 0.02].map(
-  (z) => [[0.48, 0.04, z], [0.66, 0.065, z * 2], [0.84, 0.05, z]] as V3[]
-);
-const MAIN_LEAD: V3[][] = [[[0, -0.13, 0.105], [0, -0.12, 0.2], [0, -0.05, 0.19], [0, -0.02, 0.11]]];
-const BALANCE_LEAD: V3[][] = [[[0.13, -0.09, 0.08], [0.2, -0.1, 0.15], [0.17, -0.2, 0.1]]];
-const FOV_LINES: V3[][] = [
-  [[0, 0, -0.045], [0.14, 0.1, -0.45]],
-  [[0, 0, -0.045], [-0.14, 0.1, -0.45]],
-  [[0, 0, -0.045], [0.14, -0.1, -0.45]],
-  [[0, 0, -0.045], [-0.14, -0.1, -0.45]],
+const POWER_PATHS: V3[][] = [
+  [
+    [0.1, 0, 0.015],
+    [0.22, 0.02, 0.02],
+    [0.37, 0.04, 0.015],
+  ],
 ];
-const FOV_FRAME: V3[] = [[0.14, 0.1, -0.45], [-0.14, 0.1, -0.45], [-0.14, -0.1, -0.45], [0.14, -0.1, -0.45]];
-const SQUARE: V3[] = [[-MP, 0, -MP], [MP, 0, -MP], [MP, 0, MP], [-MP, 0, MP]];
-const DIAG_A: V3[] = [[-MP, 0, -MP], [MP, 0, MP]];
-const DIAG_B: V3[] = [[MP, 0, -MP], [-MP, 0, MP]];
+const PHASE_PATHS: V3[][] = [-0.02, 0, 0.02].map(
+  (z) =>
+    [
+      [0.48, 0.04, z],
+      [0.66, 0.065, z * 2],
+      [0.84, 0.05, z],
+    ] as V3[],
+);
+const MAIN_LEAD: V3[][] = [
+  [
+    [0, -0.13, 0.105],
+    [0, -0.12, 0.2],
+    [0, -0.05, 0.19],
+    [0, -0.02, 0.11],
+  ],
+];
+const BALANCE_LEAD: V3[][] = [
+  [
+    [0.13, -0.09, 0.08],
+    [0.2, -0.1, 0.15],
+    [0.17, -0.2, 0.1],
+  ],
+];
+const FOV_LINES: V3[][] = [
+  [
+    [0, 0, -0.045],
+    [0.14, 0.1, -0.45],
+  ],
+  [
+    [0, 0, -0.045],
+    [-0.14, 0.1, -0.45],
+  ],
+  [
+    [0, 0, -0.045],
+    [0.14, -0.1, -0.45],
+  ],
+  [
+    [0, 0, -0.045],
+    [-0.14, -0.1, -0.45],
+  ],
+];
+const FOV_FRAME: V3[] = [
+  [0.14, 0.1, -0.45],
+  [-0.14, 0.1, -0.45],
+  [-0.14, -0.1, -0.45],
+  [0.14, -0.1, -0.45],
+];
+const SQUARE: V3[] = [
+  [-MP, 0, -MP],
+  [MP, 0, -MP],
+  [MP, 0, MP],
+  [-MP, 0, MP],
+];
+const DIAG_A: V3[] = [
+  [-MP, 0, -MP],
+  [MP, 0, MP],
+];
+const DIAG_B: V3[] = [
+  [MP, 0, -MP],
+  [-MP, 0, MP],
+];
 
 /** Blueprint floor plan: prop-disc footprints, frame outline, diagonals and wheelbase dimension. */
 export function FloorPlan() {
@@ -226,7 +309,12 @@ export function FloorPlan() {
       <DashedLine points={SQUARE} loop opacity={0.6} />
       <DashedLine points={DIAG_A} opacity={0.6} />
       <DashedLine points={DIAG_B} opacity={0.6} />
-      <Html position={[0.38, 0.01, 0.38]} center zIndexRange={[5, 0]} style={{ pointerEvents: "none" }}>
+      <Html
+        position={[0.38, 0.01, 0.38]}
+        center
+        zIndexRange={[5, 0]}
+        style={{ pointerEvents: "none" }}
+      >
         <div
           style={{
             font: "500 10px 'JetBrains Mono', monospace",
@@ -268,49 +356,29 @@ function MotorUnit({
     if (propRef.current) propRef.current.rotation.y = angle.current;
   });
 
-  const g = useMemo(
-    () => ({
-      base: new THREE.CylinderGeometry(0.08, 0.08, 0.012, 20),
-      screw: new THREE.CylinderGeometry(0.007, 0.007, 0.012, 6),
-      stator: new THREE.CylinderGeometry(0.05, 0.05, 0.04, 16),
-      bell: new THREE.CylinderGeometry(0.07, 0.07, 0.05, 20),
-      magnets: new THREE.CylinderGeometry(0.063, 0.063, 0.038, 14),
-      shaft: new THREE.CylinderGeometry(0.01, 0.01, 0.05, 8),
-      hub: new THREE.CylinderGeometry(0.028, 0.028, 0.02, 12),
-      nut: new THREE.CylinderGeometry(0.014, 0.014, 0.016, 6),
-      blade: new THREE.BoxGeometry(0.42, 0.008, 0.045),
-    }),
-    []
-  );
+  const g = partGeometry();
 
   return (
     <group>
       <Part name={`motor mount ${id}`} setHovered={setHovered}>
-        <EdgedMesh geometry={g.base} position={[0, 0.006, 0]} fill={fill} />
-        {[-0.055, 0.055].map((sx) =>
-          [-0.055, 0.055].map((sz) => (
-            <EdgedMesh key={`${sx}${sz}`} geometry={g.screw} position={[sx, 0.018, sz]} fill={fill} />
-          ))
-        )}
+        <EdgedMesh geometry={g.motorMount} position={[0, 0.006, 0]} fill={fill} />
       </Part>
       <Part name={`motor stator ${id}`} setHovered={setHovered}>
-        <EdgedMesh geometry={g.stator} position={[0, 0.032, 0]} dashed fill={fill} />
+        <EdgedMesh geometry={g.stator} position={[0, 0.034, 0]} dashed fill={fill} />
       </Part>
       <Part name={`motor rotor bell ${id}`} setHovered={setHovered}>
-        <EdgedMesh geometry={g.bell} position={[0, 0.077, 0]} fill={fill} />
-        <EdgedMesh geometry={g.magnets} position={[0, 0.077, 0]} dashed fill={fill} />
+        <EdgedMesh geometry={g.bell} position={[0, 0.052, 0]} fill={fill} />
+        <EdgedMesh geometry={g.magnets} position={[0, 0.05, 0]} dashed fill={fill} />
       </Part>
       <Part name={`motor shaft ${id}`} setHovered={setHovered}>
-        <EdgedMesh geometry={g.shaft} position={[0, 0.125, 0]} fill={fill} />
+        <EdgedMesh geometry={g.shaft} position={[0, 0.1, 0]} fill={fill} />
       </Part>
       <group ref={propRef} position={[0, 0.155, 0]}>
         <Part name={`propeller ${id}`} setHovered={setHovered}>
-          <EdgedMesh geometry={g.hub} fill={fill} />
-          <EdgedMesh geometry={g.blade} position={[0.22, 0, 0]} rotation={[0, 0.25, 0]} fill={fill} />
-          <EdgedMesh geometry={g.blade} position={[-0.22, 0, 0]} rotation={[0, 0.25, 0]} fill={fill} />
+          <EdgedMesh geometry={g.propeller} fill={fill} />
         </Part>
         <Part name={`prop nut ${id}`} setHovered={setHovered}>
-          <EdgedMesh geometry={g.nut} position={[0, 0.016, 0]} fill={fill} />
+          <EdgedMesh geometry={g.propNut} position={[0, 0.023, 0]} fill={fill} />
         </Part>
       </group>
       <Ring r={0.44} y={0.155} opacity={0.5} />
@@ -340,21 +408,17 @@ function Arm({
   setHovered: SetHover;
 }) {
   const angle = Math.atan2(m.position[2], m.position[0]);
-  const g = useMemo(
-    () => ({
-      tube: new THREE.CylinderGeometry(0.026, 0.026, 0.76, 8),
-      clamp: new THREE.BoxGeometry(0.06, 0.075, 0.075),
-      esc: new THREE.BoxGeometry(0.12, 0.012, 0.05),
-      cap: new THREE.CylinderGeometry(0.011, 0.011, 0.028, 10),
-      led: new THREE.CylinderGeometry(0.012, 0.012, 0.01, 10),
-    }),
-    []
-  );
+  const g = partGeometry();
 
   return (
     <group rotation={[0, -angle, 0]}>
       <Part name={`arm tube ${m.id}`} setHovered={setHovered}>
-        <EdgedMesh geometry={g.tube} position={[0.5, 0, 0]} rotation={[0, 0, Math.PI / 2]} fill={fill} />
+        <EdgedMesh
+          geometry={g.tube}
+          position={[0.5, 0, 0]}
+          rotation={[0, 0, Math.PI / 2]}
+          fill={fill}
+        />
       </Part>
       <Part name={`arm clamp ${m.id}`} setHovered={setHovered}>
         <EdgedMesh geometry={g.clamp} position={[0.22, 0, 0]} fill={fill} />
@@ -362,16 +426,25 @@ function Arm({
       <group position={[0.42, 0.04 + ex * 0.12, 0]}>
         <Part name={`esc ${m.id}`} setHovered={setHovered}>
           <EdgedMesh geometry={g.esc} fill={fill} />
-          <EdgedMesh geometry={g.cap} position={[0.04, 0.02, 0]} fill={fill} />
         </Part>
       </group>
       <Part name={`nav led ${m.id}`} setHovered={setHovered}>
-        <EdgedMesh geometry={g.led} position={[0.78, -0.035, 0]} fill={fill} />
+        <EdgedMesh
+          geometry={g.led}
+          position={[0.78, -0.03, 0]}
+          rotation={[Math.PI, 0, 0]}
+          fill={fill}
+        />
       </Part>
       {!ex && (
         <>
           <Wire name={`power wire ${m.id}`} paths={POWER_PATHS} setHovered={setHovered} />
-          <Wire name={`motor phase wire ${m.id}`} paths={PHASE_PATHS} setHovered={setHovered} hitR={0.03} />
+          <Wire
+            name={`motor phase wire ${m.id}`}
+            paths={PHASE_PATHS}
+            setHovered={setHovered}
+            hitR={0.03}
+          />
         </>
       )}
       <group position={[ARM_R + ex * 0.18, 0.03 + ex * 0.12, 0]}>
@@ -407,39 +480,7 @@ export function BlueprintDrone({
   const state = useRef({ alt: 0, heading: 0, pitch: 0, roll: 0, speed: 0 });
   const rpmRef = useRef([0.5, 0.5, 0.5, 0.5]);
 
-  const g = useMemo(
-    () => ({
-      plate: new THREE.CylinderGeometry(0.34, 0.34, 0.02, 8),
-      plateLow: new THREE.CylinderGeometry(0.3, 0.3, 0.02, 8),
-      standoff: new THREE.CylinderGeometry(0.01, 0.01, 0.1, 8),
-      pdb: new THREE.CylinderGeometry(0.12, 0.12, 0.012, 8),
-      fc: new THREE.BoxGeometry(0.14, 0.02, 0.14),
-      imu: new THREE.BoxGeometry(0.025, 0.008, 0.025),
-      grommet: new THREE.CylinderGeometry(0.012, 0.012, 0.03, 8),
-      computer: new THREE.BoxGeometry(0.16, 0.025, 0.11),
-      hsBase: new THREE.BoxGeometry(0.08, 0.006, 0.07),
-      hsFin: new THREE.BoxGeometry(0.004, 0.025, 0.06),
-      rx: new THREE.BoxGeometry(0.05, 0.012, 0.03),
-      vtx: new THREE.BoxGeometry(0.05, 0.014, 0.04),
-      whip: new THREE.CylinderGeometry(0.003, 0.003, 0.1, 6),
-      battery: new THREE.BoxGeometry(0.34, 0.12, 0.16),
-      cell: new THREE.BoxGeometry(0.075, 0.1, 0.14),
-      strap: new THREE.BoxGeometry(0.36, 0.01, 0.05),
-      xt60: new THREE.BoxGeometry(0.03, 0.02, 0.025),
-      gpsMast: new THREE.CylinderGeometry(0.008, 0.008, 0.16, 8),
-      gps: new THREE.CylinderGeometry(0.05, 0.05, 0.025, 16),
-      gpsPatch: new THREE.BoxGeometry(0.05, 0.004, 0.05),
-      camMount: new THREE.BoxGeometry(0.09, 0.01, 0.09),
-      camBody: new THREE.BoxGeometry(0.07, 0.05, 0.05),
-      yoke: new THREE.BoxGeometry(0.008, 0.08, 0.008),
-      lens: new THREE.CylinderGeometry(0.018, 0.018, 0.02, 12),
-      strut: new THREE.CylinderGeometry(0.01, 0.01, 0.33, 8),
-      skid: new THREE.CylinderGeometry(0.014, 0.014, 0.7, 10),
-      antenna: new THREE.CylinderGeometry(0.006, 0.004, 0.18, 6),
-      buzzer: new THREE.CylinderGeometry(0.02, 0.02, 0.025, 12),
-    }),
-    []
-  );
+  const g = partGeometry();
 
   useFrame((_, rawDelta) => {
     const dt = Math.min(rawDelta, 0.05);
@@ -484,20 +525,36 @@ export function BlueprintDrone({
     <group ref={root}>
       {/* arms, ESCs, wires, motors, props */}
       {MOTORS.map((m, i) => (
-        <Arm key={m.id} m={m} ex={ex} rpm={rpmRef.current[i] ?? 0.5} fill={fill} setHovered={setHovered} />
+        <Arm
+          key={m.id}
+          m={m}
+          ex={ex}
+          rpm={rpmRef.current[i] ?? 0.5}
+          fill={fill}
+          setHovered={setHovered}
+        />
       ))}
 
       {/* plates + standoffs */}
-      {P("frame top plate", <EdgedMesh geometry={g.plate} position={[0, 0.05 + ex * 0.25, 0]} fill={fill} />)}
-      {P("frame bottom plate", <EdgedMesh geometry={g.plateLow} position={[0, -0.05 - ex * 0.2, 0]} fill={fill} />)}
+      {P(
+        "frame top plate",
+        <EdgedMesh geometry={g.plate} position={[0, 0.05 + ex * 0.25, 0]} fill={fill} />,
+      )}
+      {P(
+        "frame bottom plate",
+        <EdgedMesh geometry={g.plateLow} position={[0, -0.05 - ex * 0.2, 0]} fill={fill} />,
+      )}
       {[-0.2, 0.2].map((x) =>
         [-0.2, 0.2].map((z) => (
           <group key={`${x}${z}`} position={[x, ex * 0.025, z]} scale={[1, 1 + ex * 4.5, 1]}>
             {P("plate standoff", <EdgedMesh geometry={g.standoff} fill={fill} />)}
           </group>
-        ))
+        )),
       )}
-      {P("pdb power distribution", <EdgedMesh geometry={g.pdb} position={[0, -0.02 - ex * 0.1, 0]} dashed fill={fill} />)}
+      {P(
+        "pdb power distribution",
+        <EdgedMesh geometry={g.pdb} position={[0, -0.02 - ex * 0.1, 0]} dashed fill={fill} />,
+      )}
 
       {/* flight controller on grommets */}
       <group position={[0, 0.09 + ex * 0.4, 0]}>
@@ -508,10 +565,15 @@ export function BlueprintDrone({
             <EdgedMesh geometry={g.imu} position={[0, 0.016, 0]} dashed fill={fill} />
             {[-0.05, 0.05].map((x) =>
               [-0.05, 0.05].map((z) => (
-                <EdgedMesh key={`${x}${z}`} geometry={g.grommet} position={[x, -0.02, z]} fill={fill} />
-              ))
+                <EdgedMesh
+                  key={`${x}${z}`}
+                  geometry={g.grommet}
+                  position={[x, -0.02, z]}
+                  fill={fill}
+                />
+              )),
             )}
-          </>
+          </>,
         )}
       </group>
 
@@ -520,34 +582,16 @@ export function BlueprintDrone({
         {P("onboard computer board", <EdgedMesh geometry={g.computer} fill={fill} />)}
         {P(
           "heatsink",
-          <group position={[0, 0.02, 0]}>
-            <EdgedMesh geometry={g.hsBase} fill={fill} />
-            {[-0.03, -0.015, 0, 0.015, 0.03].map((x) => (
-              <EdgedMesh key={x} geometry={g.hsFin} position={[x, 0.015, 0]} fill={fill} />
-            ))}
-          </group>
+          <EdgedMesh geometry={g.heatsink} position={[-0.02, 0.012, 0]} fill={fill} />,
         )}
       </group>
 
       {/* RC receiver + video transmitter (rear of the top plate) */}
       <group position={[-0.13, 0.075 + ex * 0.45, 0.2]}>
-        {P(
-          "rc receiver",
-          <>
-            <EdgedMesh geometry={g.rx} fill={fill} />
-            <EdgedMesh geometry={g.whip} position={[-0.03, 0.05, 0]} rotation={[0, 0, 0.5]} fill={fill} />
-            <EdgedMesh geometry={g.whip} position={[0.03, 0.05, 0]} rotation={[0, 0, -0.5]} fill={fill} />
-          </>
-        )}
+        {P("rc receiver", <EdgedMesh geometry={g.rx} fill={fill} />)}
       </group>
       <group position={[0.13, 0.075 + ex * 0.45, 0.2]}>
-        {P(
-          "vtx video transmitter",
-          <>
-            <EdgedMesh geometry={g.vtx} fill={fill} />
-            <EdgedMesh geometry={g.whip} position={[0, 0.05, 0]} fill={fill} />
-          </>
-        )}
+        {P("vtx video transmitter", <EdgedMesh geometry={g.vtx} fill={fill} />)}
       </group>
 
       {/* buzzer */}
@@ -564,10 +608,12 @@ export function BlueprintDrone({
             {[-0.1275, -0.0425, 0.0425, 0.1275].map((x) => (
               <EdgedMesh key={x} geometry={g.cell} position={[x, 0, 0]} dashed fill={fill} />
             ))}
-            <EdgedMesh geometry={g.strap} position={[0, 0.065, 0]} fill={fill} />
-          </>
+            <EdgedMesh geometry={g.strap} fill={fill} />
+          </>,
         )}
-        <group position={[0, 0, 0.095]}>{P("xt60 connector", <EdgedMesh geometry={g.xt60} fill={fill} />)}</group>
+        <group position={[0, 0, 0.095]}>
+          {P("xt60 connector", <EdgedMesh geometry={g.xt60} fill={fill} />)}
+        </group>
       </group>
       {!ex && (
         <>
@@ -581,10 +627,10 @@ export function BlueprintDrone({
         {P(
           "gps mast",
           <>
-            <EdgedMesh geometry={g.gpsMast} position={[0, 0.08, 0]} fill={fill} />
-            <EdgedMesh geometry={g.gps} position={[0, 0.17, 0]} fill={fill} />
-            <EdgedMesh geometry={g.gpsPatch} position={[0, 0.19, 0]} dashed fill={fill} />
-          </>
+            <EdgedMesh geometry={g.gpsMast} fill={fill} />
+            <EdgedMesh geometry={g.gps} position={[0, 0.172, 0]} fill={fill} />
+            <EdgedMesh geometry={g.gpsPatch} position={[0, 0.172, 0]} dashed fill={fill} />
+          </>,
         )}
       </group>
 
@@ -593,12 +639,10 @@ export function BlueprintDrone({
         {P(
           "camera gimbal",
           <>
-            <EdgedMesh geometry={g.camMount} position={[0, 0.045, 0]} fill={fill} />
-            <EdgedMesh geometry={g.yoke} position={[-0.045, 0.0, 0]} fill={fill} />
-            <EdgedMesh geometry={g.yoke} position={[0.045, 0.0, 0]} fill={fill} />
-            <EdgedMesh geometry={g.camBody} fill={fill} />
-            <EdgedMesh geometry={g.lens} position={[0, 0, -0.035]} rotation={[Math.PI / 2, 0, 0]} fill={fill} />
-          </>
+            <EdgedMesh geometry={g.gimbalMount} position={[0, 0.088, 0]} fill={fill} />
+            <EdgedMesh geometry={g.gimbalYoke} position={[0, 0.05, 0]} fill={fill} />
+            <EdgedMesh geometry={g.camera} fill={fill} />
+          </>,
         )}
         {FOV_LINES.map((l, i) => (
           <DashedLine key={i} points={l} opacity={0.5} />
@@ -610,7 +654,11 @@ export function BlueprintDrone({
       {[-1, 1].map((sx) => (
         <group key={sx}>
           {[-1, 1].map((sz) => (
-            <group key={sz} position={[sx * 0.24, -0.24 - ex * 0.15, sz * 0.2]} rotation={[0, 0, sx * 0.245]}>
+            <group
+              key={sz}
+              position={[sx * 0.24, -0.24 - ex * 0.15, sz * 0.2]}
+              rotation={[0, 0, sx * 0.245]}
+            >
               {P("landing gear strut", <EdgedMesh geometry={g.strut} fill={fill} />)}
             </group>
           ))}
@@ -622,7 +670,7 @@ export function BlueprintDrone({
 
       {/* telemetry antenna */}
       <group position={[-0.12, -0.04, 0.3]} rotation={[0.3, 0, 0.35]}>
-        {P("telemetry antenna", <EdgedMesh geometry={g.antenna} position={[0, -0.09, 0]} fill={fill} />)}
+        {P("telemetry antenna", <EdgedMesh geometry={g.antenna} fill={fill} />)}
       </group>
     </group>
   );
