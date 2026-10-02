@@ -441,7 +441,7 @@ function Index() {
       <div className="hero-layout">
         <div className="hero-copy">
           <p className="hero-eyebrow">UMIC · IIT Bombay</p>
-          <h1>TEAM <span className="h1-line">AEROVE</span></h1>
+          <h1>Team <span className="h1-line">AeRoVe</span></h1>
           <p className="hero-expansion">Aerial Robotics Vehicles</p>
           <p className="hero-tagline">Students building fully autonomous fixed-wing and multirotor aircraft that see, decide and fly on their own.</p>
           <div className="hero-actions">
@@ -572,7 +572,7 @@ function Index() {
 
     <footer>
       <a className="wordmark" href="#top" aria-label="AeRoVe home"><img src={aeroveLogo} alt="AeRoVe" /></a>
-      <p>Team AeRoVe · Aerial Robotics Vehicles · UMIC, IIT Bombay · <a href={blueprintHref} className="footer-link">3D Blueprint</a></p>
+      <p><span className="brand-name">Team AeRoVe</span> · Aerial Robotics Vehicles · UMIC, IIT Bombay · <a href={blueprintHref} className="footer-link">3D Blueprint</a></p>
       <div className="footer-connect"><img src={umicLogo} alt="UMIC" /><a href="https://www.instagram.com/umic_iitb/reels/?__d=1%3F%2F" target="_blank" rel="noreferrer" aria-label="UMIC Instagram"><Instagram /></a><a href="https://in.linkedin.com/company/unmesh-mashruwala-innovation-cell-iit-bombay" target="_blank" rel="noreferrer" aria-label="UMIC LinkedIn"><Linkedin /></a></div>
     </footer>
     <section className="closing-motto" aria-label="Our motto"><span>OUR MOTTO</span><p>“A drone is often preferred for missions that are too <em>dull, dirty, or dangerous</em> for manned aircraft.”</p></section>
