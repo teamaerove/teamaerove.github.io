@@ -26,14 +26,19 @@ import perceptionAr from "@/assets/perception-ar-simulation.png";
 import aeroveLogo from "@/assets/aerove-logo.png";
 import umicLogo from "@/assets/umic-logo.png";
 import iitbLogo from "@/assets/iitb-logo.png";
-import cuascPhoto from "@/assets/cuasc-2024.png";
+import cuascPhoto from "@/assets/cuasc-2024-hq.jpg";
 import roverPhoto from "@/assets/ri4rover-2024.png";
 import roboTitle from "@/assets/robodrive-title.png";
 import roboCollage from "@/assets/robodrive-collage.png";
 import vijayPhoto from "@/assets/vijay-patekar.png";
 import dhruvPhoto from "@/assets/dhruv-jadhav.png";
-import uasPhoto from "@/assets/uas-challenge-2023.png";
-import icuasPhoto from "@/assets/icuas-2023.png";
+import uasPhoto from "@/assets/uas-challenge-2023-hq.jpg";
+import icuasPhoto from "@/assets/icuas-2023-hq.jpg";
+import galleryAward from "@/assets/gallery-imeche-award.jpg";
+import galleryAirdrop from "@/assets/gallery-airdrop-drone.jpg";
+import galleryCrew from "@/assets/gallery-airfield-crew.jpg";
+import galleryVtol from "@/assets/gallery-vtol-runway.jpg";
+import galleryWiring from "@/assets/gallery-wiring.jpg";
 
 
 import team0 from "@/assets/AaravGupta.jpg";
@@ -242,6 +247,17 @@ const achievements = [
   { title: "ICUAS 2023", rank: "World #1", detail: "Simulation · Hardware #3", badge: "01", photo: icuasPhoto },
 ];
 
+const achievementShots: Shot[] = achievements.map((a) => ({ src: a.photo, alt: `${a.title} — ${a.rank}, ${a.detail}` }));
+
+type GalleryShot = Shot & { caption: string };
+const gallery: GalleryShot[] = [
+  { src: galleryAward, alt: "Team AeRoVe in hi-vis vests holding a trophy in front of the Institution of Mechanical Engineers backdrop", caption: "Award ceremony · IMechE UAS Challenge" },
+  { src: galleryVtol, alt: "Four AeRoVe engineers in hi-vis vests with the fixed-wing VTOL on the runway", caption: "Fixed-wing VTOL on the runway" },
+  { src: galleryAirdrop, alt: "AeRoVe multirotor with the Air Drop Box payload mounted under its frame", caption: "Air-drop payload system" },
+  { src: galleryWiring, alt: "AeRoVe member routing wiring on the drone airframe before flight", caption: "Pre-flight wiring checks" },
+  { src: galleryCrew, alt: "AeRoVe with fellow competing teams in front of a large aircraft at the airfield", caption: "With fellow teams at the airfield" },
+];
+
 const contactRoutes = [
   { label: "Sponsorship & partnerships", value: "teamaerove@gmail.com", href: "mailto:teamaerove@gmail.com", icon: IconMailWing },
   { label: "Find us", value: "UMIC, IIT Bombay, Powai, Mumbai 400076", href: "https://maps.google.com/?q=UMIC+IIT+Bombay+Powai", icon: IconLocation },
@@ -291,7 +307,7 @@ function CountUp({ value, start }: { value: string; start: boolean }) {
 // scroll-restoration bug on client-side transitions between prerendered pages.
 const blueprintHref = `${import.meta.env.BASE_URL}blueprint/`;
 
-const nav = ["about", "architecture", "team", "achievements", "contact"];
+const nav = ["about", "architecture", "team", "achievements", "gallery", "contact"];
 const label = (item: string) => (item === "architecture" ? "System Architecture" : item === "contact" ? "Contact us" : item);
 const stats: [string, string, IconType][] = [["04", "Subsystems", IconHexCluster], ["30+", "Members", IconCrew], ["05", "Global titles", IconTrophy], ["#4", "World rank", IconRank]];
 
@@ -304,7 +320,11 @@ const missionSteps: [string, string, IconType][] = [
 function Index() {
   const [activeIdx, setActiveIdx] = useState<number | null>(null);
   const active = activeIdx === null ? null : architecture[activeIdx] ?? null;
-  const [lightbox, setLightbox] = useState<Shot | null>(null);
+  const [lightboxSet, setLightboxSet] = useState<{ list: Shot[]; i: number } | null>(null);
+  const lightbox = lightboxSet ? lightboxSet.list[lightboxSet.i] ?? null : null;
+  const openLightbox = (list: Shot[], i = 0) => setLightboxSet({ list, i });
+  const closeLightbox = () => setLightboxSet(null);
+  const stepLightbox = (d: number) => setLightboxSet((s) => (s ? { ...s, i: (s.i + d + s.list.length) % s.list.length } : s));
   const [menuOpen, setMenuOpen] = useState(false);
   const [slide, setSlide] = useState(0);
   const [paused, setPaused] = useState(false);
@@ -375,8 +395,8 @@ function Index() {
   // Keyboard: Esc closes overlays, arrows step through subsystems / slides.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") { if (lightbox) setLightbox(null); else if (active) setActiveIdx(null); else setMenuOpen(false); return; }
-      if (lightbox) return;
+      if (e.key === "Escape") { if (lightbox) closeLightbox(); else if (active) setActiveIdx(null); else setMenuOpen(false); return; }
+      if (lightbox) { if (e.key === "ArrowRight") stepLightbox(1); if (e.key === "ArrowLeft") stepLightbox(-1); return; }
       if (activeIdx !== null && (e.key === "ArrowRight" || e.key === "ArrowLeft")) {
         const d = e.key === "ArrowRight" ? 1 : -1;
         setActiveIdx((i) => (i === null ? i : (i + d + architecture.length) % architecture.length));
@@ -446,7 +466,7 @@ function Index() {
         <p>Team AeRoVe of UMIC is on a never-ending pursuit of developing an ultimate system of autonomous fixed-wing as well as multirotor aircraft. Incorporating Mechatronics, Aerodynamics, Motion Path &amp; Controlling, Machine Learning and Perception, the team covers every aspect of a complete autonomous aerial vehicle.</p>
         <p>Our purpose is to push the boundaries of autonomous aerial technology and build cutting-edge systems through indigenous innovation — long-distance outdoor navigation, manipulation of large objects, interaction with moving frames of reference and 100% onboard computation.</p>
       </div>
-      <div className="about-visual reveal"><Frame src={roboCollage} alt="RoboDrive 2024 team, aircraft, award ceremony and engineering work" label="Team AeRoVe at RoboDrive" onOpen={() => setLightbox({ src: roboCollage, alt: "RoboDrive 2024 team, aircraft, award ceremony and engineering work" })} /></div>
+      <div className="about-visual reveal"><Frame src={roboCollage} alt="RoboDrive 2024 team, aircraft, award ceremony and engineering work" label="Team AeRoVe at RoboDrive" onOpen={() => openLightbox([{ src: roboCollage, alt: "RoboDrive 2024 team, aircraft, award ceremony and engineering work" }])} /></div>
       <div className="principles reveal">
         <article><IconTarget className="principle-icon" /><span>Mission</span><h3>Indigenous systems for fully autonomous flight.</h3></article>
         <article><IconLayers className="principle-icon" /><span>Approach</span><h3>Mechanics, airflow, control and vision as one aircraft.</h3></article>
@@ -502,14 +522,25 @@ function Index() {
     <section id="achievements" className="achievements-section">
       <div className="section-intro light reveal"><div className="section-marker"><IconDroneMark className="marker-icon" /><span>04</span><p>World stage</p></div><h2>Proven in<br/>competition.</h2></div>
       <div className="achievement-grid">{achievements.map((a, i) => <article className={`achievement-card achievement-${i + 1} reveal`} style={delay(i * 70)} key={a.title}>
-        <Frame src={a.photo} alt={`${a.title} team and achievement`} label={a.title} onOpen={() => setLightbox({ src: a.photo, alt: `${a.title} — ${a.rank}, ${a.detail}` })} />
+        <Frame src={a.photo} alt={`${a.title} team and achievement`} label={a.title} onOpen={() => openLightbox(achievementShots, i)} />
         <span className="achievement-badge" aria-hidden="true"><IconTrophy />{a.badge}</span>
         <div className="achievement-copy"><span>{a.rank}</span><h3>{a.title}</h3><p>{a.detail}</p></div>
       </article>)}</div>
     </section>
 
+    <section id="gallery" className="gallery-section">
+      <div className="section-intro light reveal"><div className="section-marker"><IconDroneMark className="marker-icon" /><span>05</span><p>Gallery</p></div><h2>In the<br/>field.</h2></div>
+      <div className="gallery-grid">{gallery.map((g, i) => (
+        <button type="button" key={g.src} className={`gallery-item reveal`} style={delay((i % 3) * 70)} onClick={() => openLightbox(gallery.map(({ src, caption }) => ({ src, alt: caption })), i)} aria-label={`Enlarge photo: ${g.caption}`}>
+          <img src={g.src} alt={g.alt} loading="lazy" />
+          <span className="gallery-caption">{g.caption}</span>
+          <IconZoom className="gallery-zoom" />
+        </button>
+      ))}</div>
+    </section>
+
     <section id="contact" className="contact-section">
-      <div className="section-intro light reveal"><div className="section-marker"><IconDroneMark className="marker-icon" /><span>05</span><p>Contact us</p></div><h2>Let&rsquo;s build<br/>what flies next.</h2></div>
+      <div className="section-intro light reveal"><div className="section-marker"><IconDroneMark className="marker-icon" /><span>06</span><p>Contact us</p></div><h2>Let&rsquo;s build<br/>what flies next.</h2></div>
       <div className="contact-layout">
         <div className="contact-lede reveal">
           <p>Sponsors, research groups, companies and students — every aircraft we fly starts with a conversation. Reach the team directly and we reply within a couple of days.</p>
@@ -543,7 +574,7 @@ function Index() {
         <Button ref={closeRef} variant="ghost" size="icon" className="modal-close" onClick={() => setActiveIdx(null)} aria-label="Close details"><X /></Button>
         <p className="eyebrow">0{activeIdx + 1} / 0{architecture.length} · {active.kicker}</p>
         <h2 id="modal-title"><span className="modal-icon"><active.icon /></span>{active.name}</h2>
-        <div className="modal-gallery">{active.gallery.map((g) => <Frame key={g.src} src={g.src} alt={g.alt} label="Gallery" compact onOpen={() => setLightbox(g)} />)}</div>
+        <div className="modal-gallery">{active.gallery.map((g, gi) => <Frame key={g.src} src={g.src} alt={g.alt} label="Gallery" compact onOpen={() => openLightbox(active.gallery, gi)} />)}</div>
         <p className="modal-description">{active.description}</p>
         <div className="tag-row">{active.tags.map(tag => <span key={tag}>{tag}</span>)}</div>
         <div className="modal-pager">
@@ -553,9 +584,13 @@ function Index() {
       </div>
     </div>}
 
-    {lightbox && <div className="lightbox" role="dialog" aria-modal="true" aria-label={lightbox.alt} onMouseDown={(e) => { if (e.currentTarget === e.target) setLightbox(null); }}>
-      <Button variant="ghost" size="icon" className="lightbox-close" onClick={() => setLightbox(null)} aria-label="Close image" autoFocus><X /></Button>
-      <figure><img src={lightbox.src} alt={lightbox.alt} /><figcaption>{lightbox.alt}</figcaption></figure>
+    {lightbox && <div className="lightbox" role="dialog" aria-modal="true" aria-label={lightbox.alt} onMouseDown={(e) => { if (e.currentTarget === e.target) closeLightbox(); }}>
+      <Button variant="ghost" size="icon" className="lightbox-close" onClick={closeLightbox} aria-label="Close image" autoFocus><X /></Button>
+      {lightboxSet && lightboxSet.list.length > 1 && <>
+        <Button variant="ghost" size="icon" className="lightbox-step prev" onClick={() => stepLightbox(-1)} aria-label="Previous image"><ChevronLeft /></Button>
+        <Button variant="ghost" size="icon" className="lightbox-step next" onClick={() => stepLightbox(1)} aria-label="Next image"><ChevronRight /></Button>
+      </>}
+      <figure><img src={lightbox.src} alt={lightbox.alt} /><figcaption>{lightbox.alt}{lightboxSet && lightboxSet.list.length > 1 && <span className="lightbox-count">{lightboxSet.i + 1} / {lightboxSet.list.length}</span>}</figcaption></figure>
     </div>}
   </main>;
 }
