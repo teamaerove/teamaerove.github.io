@@ -1,0 +1,32 @@
+{
+  "capabilities": [
+    {
+      "capability": "Static website and single-page content",
+      "source": "supplied archive",
+      "outcome": "migrate",
+      "status": "verified",
+      "next_action": "None"
+    },
+    {
+      "capability": "Bundled project images and supplied photos/logos",
+      "source": "supplied archive",
+      "outcome": "migrate",
+      "status": "verified",
+      "next_action": "None"
+    },
+    {
+      "capability": "External social and contact links",
+      "source": "supplied archive",
+      "outcome": "preserve",
+      "status": "verified",
+      "next_action": "None"
+    },
+    {
+      "capability": "Database, auth, records, uploaded storage, payments, email, APIs, schedules",
+      "source": "supplied archive",
+      "outcome": "absent",
+      "status": "verified",
+      "next_action": "None detected in supplied static source"
+    }
+  ]
+}
