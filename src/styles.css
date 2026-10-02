@@ -540,4 +540,50 @@ footer p:last-child { text-align: right; }
   .aero-icon * { animation: none !important; }
 }
 
+/* ===== Hero v3: split layout — copy beside the photos, not over them ===== */
+.hero-section { display: flex; flex-direction: column; justify-content: center; align-items: stretch; place-items: stretch; gap: clamp(1.5rem, 3vw, 2.5rem); min-height: min(860px, 100svh); padding: calc(68px + clamp(1.5rem, 4vw, 3rem)) clamp(1.25rem, 6vw, 6rem) clamp(1.5rem, 3vw, 2.25rem); background: radial-gradient(ellipse at 75% 40%, oklch(.3 .1 240 / .45), transparent 60%), var(--ink); }
+.hero-section .hero-layout { position: relative; z-index: 2; display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.25fr); gap: clamp(2rem, 4vw, 4rem); align-items: center; }
+.hero-section .hero-copy { position: relative; inset: auto; padding: 0; text-align: left; background: none; }
+.hero-section .h1-line { display: block; }
+.hero-eyebrow { margin: 0 0 1.1rem; font-family: var(--font-mono); font-size: .78rem; letter-spacing: .28em; text-transform: uppercase; color: var(--electric); }
+.hero-section .hero-copy h1 { font-size: clamp(2.4rem, 4.6vw, 4.6rem); line-height: .98; letter-spacing: .06em; color: var(--cloud); text-shadow: 0 0 40px oklch(.79 .14 217 / .25); }
+.hero-section .hero-expansion { margin: 1.1rem 0 0; max-width: none; font-size: clamp(.8rem, 1.3vw, 1.05rem); letter-spacing: .32em; text-transform: uppercase; color: var(--electric); }
+.hero-tagline { max-width: 440px; margin: 1.5rem 0 0; font-size: clamp(.95rem, 1.2vw, 1.08rem); line-height: 1.7; color: color-mix(in oklab, var(--cloud) 72%, transparent); }
+.hero-actions { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 2rem; }
+.hero-btn { display: inline-flex; align-items: center; gap: .55rem; padding: .8rem 1.25rem; border-radius: 10px; border: 1px solid var(--sky-line); color: var(--cloud); font-family: var(--font-display); font-weight: 600; font-size: .9rem; letter-spacing: .04em; text-decoration: none; transition: transform .25s, background .25s, box-shadow .25s; }
+.hero-btn svg { width: 20px; height: 20px; color: var(--electric); }
+.hero-btn:hover { transform: translateY(-2px); background: color-mix(in oklab, var(--electric) 12%, transparent); }
+.hero-btn.primary { border-color: transparent; color: var(--ink); background: linear-gradient(120deg, var(--electric), oklch(.86 .12 200)); box-shadow: 0 12px 30px -14px oklch(.79 .14 217 / .9); }
+.hero-btn.primary:hover { background: linear-gradient(120deg, oklch(.84 .14 214), oklch(.9 .1 200)); }
+
+.hero-section .hero-stage { position: relative; inset: auto; top: auto; left: auto; transform: none; width: 100%; height: auto; aspect-ratio: 1.5; border: 1px solid var(--sky-line); border-radius: 14px; overflow: hidden; background: var(--navy-2); box-shadow: var(--glow-strong); }
+.hero-section .hero-slide img { object-fit: cover; }
+.hero-section .hero-slide figcaption { bottom: 1rem; left: 1rem; }
+.hero-controls { position: absolute; z-index: 3; right: .9rem; bottom: .75rem; display: flex; align-items: center; gap: .5rem; padding: .25rem .4rem .25rem .7rem; border-radius: 999px; background: color-mix(in oklab, var(--ink) 55%, transparent); backdrop-filter: blur(6px); }
+.hero-section .hero-dots { position: static; translate: none; display: flex; gap: .4rem; }
+.hero-section .hero-dots button { position: relative; overflow: hidden; }
+.hero-section .hero-dots button.is-on::after { background: color-mix(in oklab, var(--cloud) 30%, transparent); }
+.hero-section .hero-dots button.is-on::before { content: ""; position: absolute; left: 0; top: 50%; height: 3px; width: 26px; translate: 0 -50%; background: var(--electric); transform-origin: 0 50%; animation: dot-fill var(--slide-ms, 5000ms) linear forwards; box-shadow: 0 0 8px var(--electric); }
+.hero-controls.is-paused .hero-dots button.is-on::before { animation: none; transform: none; }
+@keyframes dot-fill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+.hero-pause { width: 28px !important; height: 28px !important; min-width: 0; color: var(--cloud); }
+.hero-pause:hover { color: var(--electric); background: transparent; }
+.hero-pause svg { width: 14px !important; height: 14px !important; }
+
+.hero-section .hero-stats { position: relative; z-index: 2; inset: auto; left: auto; right: auto; bottom: auto; }
+
+@media (max-width: 900px) {
+  .hero-section { min-height: 0; }
+  .hero-section .hero-layout { grid-template-columns: 1fr; }
+  .hero-section .h1-line { display: inline; }
+}
+@media (max-width: 640px) {
+  .hero-section { padding-top: calc(68px + 1.5rem); }
+  .hero-section .hero-copy h1 { font-size: clamp(2.2rem, 11vw, 3rem); }
+  .hero-section .hero-expansion { letter-spacing: .2em; }
+  .hero-section .hero-slide figcaption { display: none; }
+  .hero-btn { flex: 1 1 auto; justify-content: center; }
+}
+@media (prefers-reduced-motion: reduce) { .hero-section .hero-dots button.is-on::before { animation: none; } }
+
 /* Blueprint page styles live in src/components/blueprint/blueprint.css */

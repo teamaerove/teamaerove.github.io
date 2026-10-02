@@ -1,11 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ChevronDown, ChevronLeft, ChevronRight, Instagram, Linkedin, Menu, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Instagram, Linkedin, Menu, Pause, Play, X } from "lucide-react";
 import { useEffect, useRef, useState, type CSSProperties, type ComponentType, type SVGProps } from "react";
 
 import { Drone3D } from "@/components/Drone3D";
 import { IconAero, IconArrowOut, IconBlueprint, IconChevronUp, IconCrew, IconDroneMark, IconHexCluster, IconLayers, IconLocation, IconMailWing, IconMechatronics, IconMotion, IconPerception, IconRank, IconTarget, IconTrophy, IconZoom } from "@/components/icons";
 import { Button } from "@/components/ui/button";
-import shot1 from "@/assets/aerove-5.png";
+import shot1 from "@/assets/hero-full-squad.jpg";
 import shot2 from "@/assets/aerove-3.png";
 import shot3 from "@/assets/aerove-2.png";
 import shot4 from "@/assets/aerove-4.png";
@@ -260,7 +260,7 @@ const gallery: GalleryShot[] = [
 
 const contactRoutes = [
   { label: "Sponsorship & partnerships", value: "teamaerove@gmail.com", href: "mailto:teamaerove@gmail.com", icon: IconMailWing },
-  { label: "Find us", value: "UMIC, IIT Bombay, Powai, Mumbai 400076", href: "https://maps.google.com/?q=UMIC+IIT+Bombay+Powai", icon: IconLocation },
+  { label: "Find us", value: "Desai Sethi School of Entrepreneurship, IIT Bombay", href: "https://maps.google.com/?q=Desai+Sethi+School+of+Entrepreneurship+IIT+Bombay", icon: IconLocation },
 ];
 
 const enquiryTags = ["Sponsorship", "Technology collaboration", "Campus visit", "Media & press", "Recruitment"];
@@ -306,6 +306,8 @@ function CountUp({ value, start }: { value: string; start: boolean }) {
 // Full page load: keeps three.js out of the home bundle and sidesteps a router
 // scroll-restoration bug on client-side transitions between prerendered pages.
 const blueprintHref = `${import.meta.env.BASE_URL}blueprint/`;
+
+const SLIDE_MS = 5000;
 
 const nav = ["about", "architecture", "team", "achievements", "gallery", "contact"];
 const label = (item: string) => (item === "architecture" ? "System Architecture" : item === "contact" ? "Contact us" : item);
@@ -357,9 +359,9 @@ function Index() {
   // Slideshow pauses on hover and while the tab is hidden.
   useEffect(() => {
     if (paused) return;
-    const loop = window.setInterval(() => { if (!document.hidden) setSlide((s) => (s + 1) % slides.length); }, 5000);
+    const loop = window.setInterval(() => { if (!document.hidden) setSlide((s) => (s + 1) % slides.length); }, SLIDE_MS);
     return () => window.clearInterval(loop);
-  }, [paused]);
+  }, [paused, slide]);
 
   // Nav state, reading progress and back-to-top.
   useEffect(() => {
@@ -430,33 +432,41 @@ function Index() {
       {nav.map((item, i) => <a key={item} href={`#${item}`} tabIndex={menuOpen ? 0 : -1} style={{ transitionDelay: menuOpen ? `${80 + i * 50}ms` : "0ms" }} className={section === item ? "is-current" : ""} onClick={() => setMenuOpen(false)}><span>0{i + 1}</span>{label(item)}</a>)}
     </div>
 
-    <header id="top" className={`hero-section ${booted ? "is-booted" : ""} ${skipBoot ? "skip-boot" : ""}`} onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
-      <div className="hero-stage">
-        <div className="hero-slides">
-          {slides.map((s, i) => (
-            <figure key={s.src} className={`hero-slide ${i === slide ? "is-active" : ""}`} aria-hidden={i === slide ? undefined : true}>
-              <img src={s.src} alt={s.alt} fetchPriority={i === 0 ? "high" : undefined} />
-              <figcaption>{s.caption}</figcaption>
-            </figure>
-          ))}
-          <div className="hero-veil" />
-        </div>
-      </div>
-
+    <header id="top" className={`hero-section ${booted ? "is-booted" : ""} ${skipBoot ? "skip-boot" : ""}`}>
       <div className="boot-screen" aria-hidden="true">
         <span className="boot-line">SYSTEM ONLINE</span>
         <span className="boot-bar" />
       </div>
 
-      <div className="hero-copy">
-        <h1>TEAM AEROVE</h1>
-        <p className="hero-expansion">AERIAL ROBOTICS VEHICLES</p>
+      <div className="hero-layout">
+        <div className="hero-copy">
+          <p className="hero-eyebrow">UMIC · IIT Bombay</p>
+          <h1>TEAM <span className="h1-line">AEROVE</span></h1>
+          <p className="hero-expansion">Aerial Robotics Vehicles</p>
+          <p className="hero-tagline">Students building fully autonomous fixed-wing and multirotor aircraft that see, decide and fly on their own.</p>
+          <div className="hero-actions">
+            <a className="hero-btn primary" href="#architecture">Explore the system</a>
+            <a className="hero-btn" href={blueprintHref}><IconBlueprint />3D blueprint</a>
+          </div>
+        </div>
+
+        <div className="hero-stage">
+          <div className="hero-slides">
+            {slides.map((s, i) => (
+              <figure key={s.src} className={`hero-slide ${i === slide ? "is-active" : ""}`} aria-hidden={i === slide ? undefined : true}>
+                <img src={s.src} alt={s.alt} fetchPriority={i === 0 ? "high" : undefined} />
+                <figcaption>{s.caption}</figcaption>
+              </figure>
+            ))}
+          </div>
+          <div className={`hero-controls ${paused ? "is-paused" : ""}`} style={{ "--slide-ms": `${SLIDE_MS}ms` } as CSSProperties}>
+            <div className="hero-dots">{slides.map((s, i) => <Button key={s.src} variant="ghost" size="icon" className={i === slide ? "is-on" : ""} onClick={() => setSlide(i)} aria-label={`Show photo ${i + 1}`} aria-pressed={i === slide} />)}</div>
+            <Button variant="ghost" size="icon" className="hero-pause" onClick={() => setPaused((p) => !p)} aria-label={paused ? "Play slideshow" : "Pause slideshow"}>{paused ? <Play /> : <Pause />}</Button>
+          </div>
+        </div>
       </div>
 
-      <div className="hero-dots">{slides.map((s, i) => <Button key={s.src} variant="ghost" size="icon" className={i === slide ? "is-on" : ""} onClick={() => setSlide(i)} aria-label={`Show photo ${i + 1}`} aria-pressed={i === slide} />)}</div>
-
       <div className="hero-stats">{stats.map(([n, l, Icon]) => <div key={l}><Icon className="stat-icon" /><strong><CountUp value={n} start={booted} /></strong><span>{l}</span></div>)}</div>
-      <a className="scroll-cue" href="#about"><ChevronDown /><span>Explore</span></a>
     </header>
 
     <section id="about" className="about-section">
