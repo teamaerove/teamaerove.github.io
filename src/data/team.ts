@@ -56,7 +56,6 @@ export const teamGroups: TeamGroup[] = [
       { name: "Basant", role: "Motion Path & Controlling" },
       { name: "Naman", role: "Motion Path & Controlling" },
       { name: "Krutarth", role: "Motion Path & Controlling" },
-      { name: "Devangi", role: "Aerodynamics" },
     ],
   },
   {
@@ -66,6 +65,7 @@ export const teamGroups: TeamGroup[] = [
       { name: "Abha", role: "Motion Path & Controlling" },
       { name: "Cheriyan", role: "Perception" },
       { name: "Vidit", role: "Perception" },
+      { name: "Devangi", role: "Aerodynamics" },
       { name: "Afnan Ahmed", role: "Phase 2" },
       { name: "Tathagata", role: "Phase 2" },
       { name: "Bhavya Patel", role: "Phase 2" },

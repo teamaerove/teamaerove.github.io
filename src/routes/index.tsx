@@ -1,7 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ArrowUp, ArrowUpRight, ChevronDown, ChevronLeft, ChevronRight, ExternalLink, Instagram, Linkedin, Mail, MapPin, Maximize2, Menu, Send, X } from "lucide-react";
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { ChevronDown, ChevronLeft, ChevronRight, Instagram, Linkedin, Menu, X } from "lucide-react";
+import { useEffect, useRef, useState, type CSSProperties, type ComponentType, type SVGProps } from "react";
 
+import { Drone3D } from "@/components/Drone3D";
+import { IconAero, IconArrowOut, IconChevronUp, IconCrew, IconDroneMark, IconHexCluster, IconLayers, IconLocation, IconMailWing, IconMechatronics, IconMotion, IconPerception, IconRank, IconRecruit, IconTarget, IconTrophy, IconZoom } from "@/components/icons";
 import { MicroDrone } from "@/components/MicroDrone";
 import { Button } from "@/components/ui/button";
 import shot1 from "@/assets/aerove-5.png";
@@ -120,7 +122,8 @@ export const Route = createFileRoute("/")({
 });
 
 type Shot = { src: string; alt: string };
-type Subsystem = { name: string; kicker: string; description: string; tags: string[]; gallery: Shot[] };
+type IconType = ComponentType<SVGProps<SVGSVGElement>>;
+type Subsystem = { name: string; kicker: string; icon: IconType; description: string; tags: string[]; gallery: Shot[] };
 type Member = { name: string; role: string; instagram?: string; linkedin?: string };
 const photoFor = (name: string) => memberPhotos[name.replace(/[^A-Za-z0-9]/g, "")];
 
@@ -134,6 +137,7 @@ const slides = [
 const architecture: Subsystem[] = [
   {
     name: "Mechatronics",
+    icon: IconMechatronics,
     kicker: "Structure / Hardware",
     description:
       "From CAD and structural analysis to carbon-fibre layups, the hex-configured mothership and its daughter drone are built to carry, deploy and recover payloads in flight. Gripper mechanisms, power distribution and flight-ready wiring are all designed and validated in house before a single motor spins.",
@@ -146,6 +150,7 @@ const architecture: Subsystem[] = [
   },
   {
     name: "Aerodynamics",
+    icon: IconAero,
     kicker: "Airflow / Efficiency",
     description:
       "Airfoil selection, flying-wing planforms and rotor downwash are studied with computational fluid dynamics so every aircraft carries more, flies longer and stays stable in gusty outdoor conditions. Simulation results drive the geometry that the structures team then builds.",
@@ -158,6 +163,7 @@ const architecture: Subsystem[] = [
   },
   {
     name: "Motion Path & Controlling",
+    icon: IconMotion,
     kicker: "Planning / Flight stack",
     description:
       "Motion Path & Controlling, the MPC subsystem, plans where the aircraft goes and holds it there. Occupancy mapping turns sensor data into a navigable world, path planners find collision-free trajectories through it, and dynamic models with tuned controllers track those trajectories on the PX4 flight stack in Gazebo simulation before every real flight.",
@@ -170,6 +176,7 @@ const architecture: Subsystem[] = [
   },
   {
     name: "Perception",
+    icon: IconPerception,
     kicker: "Vision / Intelligence",
     description:
       "Learning-based vision finds the target in camera data and computes its 3D position in the ground frame using depth. Feature detection handles visual localisation, defect and crack detection drives inspection missions, and augmented-reality simulation lets every model be validated before it flies — all at 30 frames per second on board.",
@@ -204,12 +211,12 @@ const groups: { title: string; members: Member[] }[] = [
   ]},
   { title: "Senior Engineers", members: [
     { name: "Basant", role: "Motion Path & Controlling" }, { name: "Naman", role: "Motion Path & Controlling" }, { name: "Krutarth", role: "Motion Path & Controlling" },
-    { name: "Devangi", role: "Aerodynamics", instagram: "https://www.instagram.com/devi.lilvelcro", linkedin: "https://www.linkedin.com/in/devangi-chaudhuri-0a584b242/" },
   ]},
   { title: "Junior Engineers", members: [
     { name: "Vipul Bansal", role: "Motion Path & Controlling", instagram: "https://www.instagram.com/_vipul_957_/", linkedin: "https://www.linkedin.com/in/vipul-bansal-8b1344289" },
     { name: "Abha", role: "Motion Path & Controlling", instagram: "https://www.instagram.com/abhas_2007/", linkedin: "https://www.linkedin.com/in/abha-shelke-835430390/" },
     { name: "Cheriyan", role: "Perception", linkedin: "https://www.linkedin.com/in/cheriyanr200779" }, { name: "Vidit", role: "Perception", linkedin: "https://www.linkedin.com/in/vidit-nagpurkar/" },
+    { name: "Devangi", role: "Aerodynamics", instagram: "https://www.instagram.com/devi.lilvelcro", linkedin: "https://www.linkedin.com/in/devangi-chaudhuri-0a584b242/" },
     { name: "Afnan Ahmed", role: "Phase 2", instagram: "https://www.instagram.com/afnanahmed450", linkedin: "https://www.linkedin.com/in/afnan-ahmed-449680374" },
     { name: "Tathagata", role: "Phase 2", linkedin: "https://www.linkedin.com/in/tathagata-roy-0a1b1a20a" },
     { name: "Bhavya Patel", role: "Phase 2", instagram: "https://www.instagram.com/_.bhavya.patel_", linkedin: "https://www.linkedin.com/in/bhavya-patel-64014b377/" },
@@ -237,9 +244,9 @@ const achievements = [
 ];
 
 const contactRoutes = [
-  { label: "Sponsorship & partnerships", value: "aerove@umic.iitb.ac.in", href: "mailto:aerove@umic.iitb.ac.in", icon: Mail },
-  { label: "Join the team", value: "Open recruitment each semester", href: "mailto:aerove@umic.iitb.ac.in?subject=Joining%20Team%20AeRoVe", icon: Send },
-  { label: "Find us", value: "UMIC, IIT Bombay, Powai, Mumbai 400076", href: "https://maps.google.com/?q=UMIC+IIT+Bombay+Powai", icon: MapPin },
+  { label: "Sponsorship & partnerships", value: "aerove@umic.iitb.ac.in", href: "mailto:aerove@umic.iitb.ac.in", icon: IconMailWing },
+  { label: "Join the team", value: "Open recruitment each semester", href: "mailto:aerove@umic.iitb.ac.in?subject=Joining%20Team%20AeRoVe", icon: IconRecruit },
+  { label: "Find us", value: "UMIC, IIT Bombay, Powai, Mumbai 400076", href: "https://maps.google.com/?q=UMIC+IIT+Bombay+Powai", icon: IconLocation },
 ];
 
 const enquiryTags = ["Sponsorship", "Technology collaboration", "Campus visit", "Media & press", "Recruitment"];
@@ -248,7 +255,7 @@ function Frame({ src, alt, label, compact = false, onOpen }: { src?: string | nu
   const img = src ? <img src={src} alt={alt ?? label} loading="lazy" /> : <div className="frame-empty"><span>{label}</span></div>;
   return (
     <div className={`frame ${compact ? "frame-compact" : ""}`}>
-      {onOpen && src ? <button type="button" className="frame-zoom" onClick={onOpen} aria-label={`Enlarge: ${alt ?? label}`}>{img}<Maximize2 className="frame-zoom-icon" /></button> : img}
+      {onOpen && src ? <button type="button" className="frame-zoom" onClick={onOpen} aria-label={`Enlarge: ${alt ?? label}`}>{img}<IconZoom className="frame-zoom-icon" /></button> : img}
       <i className="frame-glow" />
     </div>
   );
@@ -261,7 +268,7 @@ function initials(name: string) {
 /** Stagger offset for the scroll-reveal animation. */
 const delay = (ms: number) => ({ "--d": `${ms}ms` }) as CSSProperties;
 
-/** Counts a stat like "35+" or "#4" up from zero once it scrolls into view. */
+/** Counts a stat like "30+" or "#4" up from zero once it scrolls into view. */
 function CountUp({ value, start }: { value: string; start: boolean }) {
   const match = value.match(/^(\D*)(\d+)(\D*)$/);
   const target = match ? Number(match[2]) : 0;
@@ -284,7 +291,13 @@ function CountUp({ value, start }: { value: string; start: boolean }) {
 
 const nav = ["about", "architecture", "team", "achievements", "contact"];
 const label = (item: string) => (item === "architecture" ? "System Architecture" : item === "contact" ? "Contact us" : item);
-const stats = [["04", "Subsystems"], ["35+", "Members"], ["05", "Global titles"], ["#4", "World rank"]] as const;
+const stats: [string, string, IconType][] = [["04", "Subsystems", IconHexCluster], ["30+", "Members", IconCrew], ["05", "Global titles", IconTrophy], ["#4", "World rank", IconRank]];
+
+const missionSteps: [string, string, IconType][] = [
+  ["Carry", "The hex mothership ferries the daughter drone to the target zone.", IconHexCluster],
+  ["Launch", "It holds a stable hover while the daughter lifts off its back.", IconDroneMark],
+  ["Recover", "The daughter completes the mission and docks for the flight home.", IconTarget],
+];
 
 function Index() {
   const [activeIdx, setActiveIdx] = useState<number | null>(null);
@@ -421,12 +434,12 @@ function Index() {
 
       <div className="hero-dots">{slides.map((s, i) => <Button key={s.src} variant="ghost" size="icon" className={i === slide ? "is-on" : ""} onClick={() => setSlide(i)} aria-label={`Show photo ${i + 1}`} aria-pressed={i === slide} />)}</div>
 
-      <div className="hero-stats">{stats.map(([n, l]) => <div key={l}><strong><CountUp value={n} start={booted} /></strong><span>{l}</span></div>)}</div>
+      <div className="hero-stats">{stats.map(([n, l, Icon]) => <div key={l}><Icon className="stat-icon" /><strong><CountUp value={n} start={booted} /></strong><span>{l}</span></div>)}</div>
       <a className="scroll-cue" href="#about"><ChevronDown /><span>Explore</span></a>
     </header>
 
     <section id="about" className="about-section">
-      <div className="section-marker reveal"><span>01</span><p>Our motto</p></div>
+      <div className="section-marker reveal"><IconDroneMark className="marker-icon" /><span>01</span><p>Our motto</p></div>
       <div className="about-statement reveal">
         <h2>“A drone is often preferred for missions that are too <em>dull, dirty, or dangerous</em> for manned aircraft.”</h2>
         <p>Team AeRoVe of UMIC is on a never-ending pursuit of developing an ultimate system of autonomous fixed-wing as well as multirotor aircraft. Incorporating Mechatronics, Aerodynamics, Motion Path &amp; Controlling, Machine Learning and Perception, the team covers every aspect of a complete autonomous aerial vehicle.</p>
@@ -434,26 +447,33 @@ function Index() {
       </div>
       <div className="about-visual reveal"><Frame src={roboCollage} alt="RoboDrive 2024 team, aircraft, award ceremony and engineering work" label="Team AeRoVe at RoboDrive" onOpen={() => setLightbox({ src: roboCollage, alt: "RoboDrive 2024 team, aircraft, award ceremony and engineering work" })} /></div>
       <div className="principles reveal">
-        <article><span>Mission</span><h3>Indigenous systems for fully autonomous flight.</h3></article>
-        <article><span>Approach</span><h3>Mechanics, airflow, control and vision as one aircraft.</h3></article>
+        <article><IconTarget className="principle-icon" /><span>Mission</span><h3>Indigenous systems for fully autonomous flight.</h3></article>
+        <article><IconLayers className="principle-icon" /><span>Approach</span><h3>Mechanics, airflow, control and vision as one aircraft.</h3></article>
       </div>
     </section>
 
     <section id="architecture" className="work-section">
-      <div className="section-intro light reveal"><div className="section-marker"><span>02</span><p>System architecture</p></div><h2>The what and how<br/>of the entire system.</h2></div>
-      <p className="arch-lede reveal">A hex-configured mothership carries a daughter drone to the target zone, holds a stable hover while the daughter launches from its back, and returns home as the daughter completes the mission — every stage computed on board.</p>
+      <div className="section-intro light reveal"><div className="section-marker"><IconDroneMark className="marker-icon" /><span>02</span><p>System architecture</p></div><h2>The what and how<br/>of the entire system.</h2></div>
+      <div className="arch-showcase">
+        <div className="arch-brief reveal">
+          <p className="arch-lede">A hex-configured mothership carries a daughter drone to the target zone, holds a stable hover while the daughter launches from its back, and returns home as the daughter completes the mission — every stage computed on board.</p>
+          <ol className="mission-steps">{missionSteps.map(([title, text, Icon], i) => <li key={title} className="reveal" style={delay(i * 90)}><span className="mission-icon"><Icon /></span><div><strong><em>0{i + 1}</em>{title}</strong><p>{text}</p></div></li>)}</ol>
+        </div>
+        <figure className="arch-model reveal"><Drone3D /><figcaption>Live flight model · <span className="on-hover">move your cursor to steer</span><span className="on-touch">drag sideways to steer</span></figcaption></figure>
+      </div>
       <div className="subsystem-grid">{architecture.map((s, i) => (
         <Button variant="ghost" className="subsystem-card reveal" style={delay(i * 70)} key={s.name} onClick={() => setActiveIdx(i)} aria-label={`Open ${s.name} details`} aria-haspopup="dialog">
           {s.gallery[0] && <Frame src={s.gallery[0].src} alt={s.gallery[0].alt} label={s.name} />}
           <span className="subsystem-index">0{i + 1}</span>
+          <span className="subsystem-badge"><s.icon /></span>
           <span className="subsystem-copy"><span className="subsystem-kicker">{s.kicker}</span><h3>{s.name}</h3></span>
-          <ExternalLink className="card-arrow" />
+          <IconArrowOut className="card-arrow" />
         </Button>
       ))}</div>
     </section>
 
     <section id="team" className="team-section">
-      <div className="section-intro light reveal"><div className="section-marker"><span>03</span><p>The people</p></div><h2>35+ minds.<br/>One airspace.</h2></div>
+      <div className="section-intro light reveal"><div className="section-marker"><IconDroneMark className="marker-icon" /><span>03</span><p>The people</p></div><h2>30+ minds.<br/>One airspace.</h2></div>
       <div className="team-filter reveal" role="tablist" aria-label="Filter team by group">
         {teamTabs.map((t) => <button key={t} type="button" role="tab" aria-selected={teamFilter === t} className={teamFilter === t ? "is-on" : ""} onClick={() => setTeamFilter(t)}>{t}<span>{t === "All" ? groups.reduce((n, g) => n + g.members.length, 0) : groups.find((g) => g.title === t)?.members.length}</span></button>)}
       </div>
@@ -474,16 +494,16 @@ function Index() {
     </section>
 
     <section id="achievements" className="achievements-section">
-      <div className="section-intro light reveal"><div className="section-marker"><span>04</span><p>World stage</p></div><h2>Proven in<br/>competition.</h2></div>
+      <div className="section-intro light reveal"><div className="section-marker"><IconDroneMark className="marker-icon" /><span>04</span><p>World stage</p></div><h2>Proven in<br/>competition.</h2></div>
       <div className="achievement-grid">{achievements.map((a, i) => <article className={`achievement-card achievement-${i + 1} reveal`} style={delay(i * 70)} key={a.title}>
         <Frame src={a.photo} alt={`${a.title} team and achievement`} label={a.title} onOpen={() => setLightbox({ src: a.photo, alt: `${a.title} — ${a.rank}, ${a.detail}` })} />
-        <span className="achievement-badge" aria-hidden="true">{a.badge}</span>
+        <span className="achievement-badge" aria-hidden="true"><IconTrophy />{a.badge}</span>
         <div className="achievement-copy"><span>{a.rank}</span><h3>{a.title}</h3><p>{a.detail}</p></div>
       </article>)}</div>
     </section>
 
     <section id="contact" className="contact-section">
-      <div className="section-intro light reveal"><div className="section-marker"><span>05</span><p>Contact us</p></div><h2>Let&rsquo;s build<br/>what flies next.</h2></div>
+      <div className="section-intro light reveal"><div className="section-marker"><IconDroneMark className="marker-icon" /><span>05</span><p>Contact us</p></div><h2>Let&rsquo;s build<br/>what flies next.</h2></div>
       <div className="contact-layout">
         <div className="contact-lede reveal">
           <p>Sponsors, research groups, companies and students — every aircraft we fly starts with a conversation. Reach the team directly and we reply within a couple of days.</p>
@@ -495,9 +515,9 @@ function Index() {
         </div>
         <div className="contact-cards">{contactRoutes.map(({ label: l, value, href, icon: Icon }, i) => (
           <a className="contact-card reveal" style={delay(i * 70)} key={l} href={href} target={href.startsWith("http") ? "_blank" : undefined} rel="noreferrer">
-            <Icon />
+            <span className="contact-icon"><Icon /></span>
             <div><span>{l}</span><strong>{value}</strong></div>
-            <ArrowUpRight className="contact-card-arrow" />
+            <IconArrowOut className="contact-card-arrow" />
           </a>
         ))}</div>
       </div>
@@ -510,13 +530,13 @@ function Index() {
     </footer>
     <section className="closing-motto" aria-label="Our motto"><span>OUR MOTTO</span><p>“A drone is often preferred for missions that are too <em>dull, dirty, or dangerous</em> for manned aircraft.”</p></section>
 
-    <a className={`back-to-top ${progress > 0.12 ? "is-shown" : ""}`} href="#top" aria-label="Back to top" tabIndex={progress > 0.12 ? 0 : -1}><ArrowUp /></a>
+    <a className={`back-to-top ${progress > 0.12 ? "is-shown" : ""}`} href="#top" aria-label="Back to top" tabIndex={progress > 0.12 ? 0 : -1}><IconChevronUp /></a>
 
     {active && activeIdx !== null && <div className="modal-backdrop" role="presentation" onMouseDown={(e) => { if (e.currentTarget === e.target) setActiveIdx(null); }}>
       <div className="subsystem-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" key={active.name}>
         <Button ref={closeRef} variant="ghost" size="icon" className="modal-close" onClick={() => setActiveIdx(null)} aria-label="Close details"><X /></Button>
         <p className="eyebrow">0{activeIdx + 1} / 0{architecture.length} · {active.kicker}</p>
-        <h2 id="modal-title">{active.name}</h2>
+        <h2 id="modal-title"><span className="modal-icon"><active.icon /></span>{active.name}</h2>
         <div className="modal-gallery">{active.gallery.map((g) => <Frame key={g.src} src={g.src} alt={g.alt} label="Gallery" compact onOpen={() => setLightbox(g)} />)}</div>
         <p className="modal-description">{active.description}</p>
         <div className="tag-row">{active.tags.map(tag => <span key={tag}>{tag}</span>)}</div>

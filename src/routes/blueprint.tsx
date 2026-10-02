@@ -126,7 +126,7 @@ function BlueprintPage() {
         <div className="bp-stats">
           {[
             ["04", "Subsystems"],
-            ["35+", "Members"],
+            ["30+", "Members"],
             ["05", "Global titles"],
             ["#4", "World rank"],
           ].map(([n, l]) => (
@@ -180,7 +180,7 @@ function BlueprintPage() {
 
       {/* Team */}
       <section id="team" className="bp-section">
-        <h2>35+ minds. One airspace.</h2>
+        <h2>30+ minds. One airspace.</h2>
         {teamGroups.map((g) => (
           <div key={g.title} className="bp-team-group">
             <h3>
