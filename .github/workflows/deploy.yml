@@ -26,8 +26,9 @@ jobs:
       - run: npm ci
       - run: npm run build
         env:
-          # <owner>.github.io repos are served from the domain root; others from /<repo>/.
-          GITHUB_PAGES_BASE: ${{ endsWith(github.event.repository.name, '.github.io') && '/' || format('/{0}/', github.event.repository.name) }}
+          # Only the repo named exactly <owner>.github.io is served from the domain root;
+          # any other repo (even one ending in .github.io) is served from /<repo>/.
+          GITHUB_PAGES_BASE: ${{ github.event.repository.name == format('{0}.github.io', github.repository_owner) && '/' || format('/{0}/', github.event.repository.name) }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist/client
