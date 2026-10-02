@@ -3,7 +3,7 @@ import { Suspense, lazy, useEffect, useState } from "react";
 import "@/components/blueprint/blueprint.css";
 import aeroveLogo from "@/assets/aerove-logo.png";
 import umicLogo from "@/assets/umic-logo.png";
-import iitbLogo from "@/assets/iitb-logo.png";
+import iitbLogo from "@/assets/iitb-logo.svg";
 
 export const Route = createFileRoute("/blueprint")({
   head: () => ({

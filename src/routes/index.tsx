@@ -25,7 +25,7 @@ import perceptionAr from "@/assets/perception-ar-simulation.png";
 
 import aeroveLogo from "@/assets/aerove-logo.png";
 import umicLogo from "@/assets/umic-logo.png";
-import iitbLogo from "@/assets/iitb-logo.png";
+import iitbLogo from "@/assets/iitb-logo.svg";
 import cuascPhoto from "@/assets/cuasc-2024-hq.jpg";
 import roverPhoto from "@/assets/ri4rover-2024.png";
 import roboTitle from "@/assets/robodrive-title.png";
