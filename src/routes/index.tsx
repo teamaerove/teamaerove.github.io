@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ChevronLeft, ChevronRight, Instagram, Linkedin, Menu, Pause, Play, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Instagram, Linkedin, Menu, MessageCircle, Pause, Play, X } from "lucide-react";
 import { useEffect, useRef, useState, type CSSProperties, type ComponentType, type SVGProps } from "react";
 
 import { Drone3D } from "@/components/Drone3D";
@@ -29,7 +29,6 @@ import iitbLogo from "@/assets/iitb-logo.svg";
 import cuascPhoto from "@/assets/cuasc-2024-hq.jpg";
 import roverPhoto from "@/assets/ri4rover-2024.png";
 import roboTitle from "@/assets/robodrive-title.png";
-import roboCollage from "@/assets/robodrive-collage.png";
 import vijayPhoto from "@/assets/vijay-patekar.png";
 import dhruvPhoto from "@/assets/dhruv-jadhav.png";
 import uasPhoto from "@/assets/uas-challenge-2023-hq.jpg";
@@ -73,6 +72,16 @@ import team29 from "@/assets/Shreeya.jpeg";
 import team30 from "@/assets/Tathagata.png";
 import team31 from "@/assets/Vidit.jpeg";
 import team32 from "@/assets/VipulBansal.jpeg";
+import team33 from "@/assets/AayushKamble.jpg";
+import team34 from "@/assets/AdityaYadav.jpg";
+import team35 from "@/assets/AnjaliJogi.jpg";
+import team36 from "@/assets/ArjunSharma.jpg";
+import team37 from "@/assets/DhruvNarkhede.jpg";
+import team38 from "@/assets/HetAkbari.jpg";
+import team39 from "@/assets/NiravKhobragade.jpg";
+import team40 from "@/assets/PragyJain.jpg";
+import team41 from "@/assets/SamarthCharhate.jpg";
+import team42 from "@/assets/SharvanPatil.jpg";
 
 const memberPhotos: Record<string, string> = {
   AaravGupta: team0,
@@ -109,6 +118,16 @@ const memberPhotos: Record<string, string> = {
   Tathagata: team30,
   Vidit: team31,
   VipulBansal: team32,
+  AayushKamble: team33,
+  AdityaYadav: team34,
+  AnjaliJogi: team35,
+  ArjunSharma: team36,
+  DhruvNarkhede: team37,
+  HetAkbari: team38,
+  NiravKhobragade: team39,
+  PragyJain: team40,
+  SamarthCharhate: team41,
+  SharvanPatil: team42,
 };
 
 export const Route = createFileRoute("/")({
@@ -205,30 +224,47 @@ const groups: { title: string; members: Member[] }[] = [
     { name: "Vijay Patekar", role: "Manager", linkedin: "https://www.linkedin.com/in/vijay-patekar-91598b372?utm_source=share_via&utm_content=profile&utm_medium=member_android" },
     { name: "Dhruv Jadhav", role: "Manager", instagram: "https://www.instagram.com/dhruv_jadhav_45", linkedin: "https://www.linkedin.com/in/dhruv-jadhav-b95407318/?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base%3BbdAY%2F%2FqbTgqqQJKShuYlVg%3D%3D" },
   ]},
-  { title: "Subsystem Leads", members: [
-    { name: "Sambhav", role: "Mechatronics Lead", instagram: "https://www.instagram.com/polestar2025", linkedin: "https://www.linkedin.com/in/sambhav-jha-22445b262" },
-    { name: "Nipun", role: "Mechatronics Lead", instagram: "https://www.instagram.com/nipun.nistane", linkedin: "https://www.linkedin.com/in/nipun-nistane-7a0bb5312" },
-    { name: "Durva", role: "Aerodynamics Lead", instagram: "https://www.instagram.com/dpg_1937", linkedin: "https://www.linkedin.com/in/durva-gandharva-164405388" },
-    { name: "Arpit Kumar", role: "Motion Path & Controlling Lead" },
-    { name: "Narendra", role: "Perception Lead", instagram: "https://www.instagram.com/n_r_ndr_/", linkedin: "https://www.linkedin.com/in/narendra-aironi/" },
-    { name: "Aarav Gupta", role: "Perception Lead", linkedin: "https://www.linkedin.com/in/aarav-gupta-128282202/" },
+  // Subsystem groups share their title with the matching `architecture` entry.
+  { title: "Mechatronics", members: [
+    { name: "Sambhav", role: "Subsystem Lead", instagram: "https://www.instagram.com/polestar2025", linkedin: "https://www.linkedin.com/in/sambhav-jha-22445b262" },
+    { name: "Nipun", role: "Subsystem Lead", instagram: "https://www.instagram.com/nipun.nistane", linkedin: "https://www.linkedin.com/in/nipun-nistane-7a0bb5312" },
+    { name: "Sharvan Patil", role: "Junior Engineer", instagram: "https://www.instagram.com/sharvan_2987", linkedin: "https://www.linkedin.com/in/sharvan-chand-patil-97793238a" },
+    { name: "Het Akbari", role: "Junior Engineer", instagram: "https://www.instagram.com/hetbuoy", linkedin: "https://www.linkedin.com/in/het-akbari-2bbba0416" },
+    { name: "Anjali Jogi", role: "Junior Engineer", instagram: "https://www.instagram.com/anjali_.4477", linkedin: "https://www.linkedin.com/in/anjali-jogi-501b12368" },
+    { name: "Dhruv Narkhede", role: "Junior Engineer", instagram: "https://www.instagram.com/dhruv_onthemove" },
+    { name: "Aditya Yadav", role: "Junior Engineer", instagram: "https://www.instagram.com/adityay_2006", linkedin: "https://www.linkedin.com/in/aditya-yadav-877b12270" },
   ]},
-  { title: "Senior Engineers", members: [
-    { name: "Basant", role: "Motion Path & Controlling" }, { name: "Naman", role: "Motion Path & Controlling" }, { name: "Krutarth", role: "Motion Path & Controlling" },
+  { title: "Aerodynamics", members: [
+    { name: "Durva", role: "Subsystem Lead", instagram: "https://www.instagram.com/dpg_1937", linkedin: "https://www.linkedin.com/in/durva-gandharva-164405388" },
+    { name: "Poorvansh Jain", role: "Senior Engineer", instagram: "https://www.instagram.com/poorvansh_jain/", linkedin: "https://www.linkedin.com/in/poorvansh-jain-0a696b317/" },
+    { name: "Devangi", role: "Junior Engineer", instagram: "https://www.instagram.com/devi.lilvelcro", linkedin: "https://www.linkedin.com/in/devangi-chaudhuri-0a584b242/" },
+    { name: "Nirav Khobragade", role: "Junior Engineer", instagram: "https://www.instagram.com/nirav_khobragade_01", linkedin: "https://www.linkedin.com/in/nirav-khobragade-5b89723a2" },
+    { name: "Aayush Kamble", role: "Junior Engineer", instagram: "https://www.instagram.com/aayushkamble4579", linkedin: "https://www.linkedin.com/in/aayush-kamble-9aa730381" },
+    { name: "Pragy Jain", role: "Junior Engineer", linkedin: "https://www.linkedin.com/in/pragy-jain-4a6105387" },
+    { name: "Rishit Shejul", role: "Junior Engineer", instagram: "https://www.instagram.com/rishittt._._", linkedin: "https://www.linkedin.com/in/rishit-shejul/" },
+  ]},
+  { title: "Motion Path & Controlling", members: [
+    { name: "Arpit Kumar", role: "Subsystem Lead" },
+    { name: "Basant", role: "Senior Engineer" }, { name: "Naman", role: "Senior Engineer" }, { name: "Krutarth", role: "Senior Engineer" },
+    { name: "Vipul Bansal", role: "Junior Engineer", instagram: "https://www.instagram.com/_vipul_957_/", linkedin: "https://www.linkedin.com/in/vipul-bansal-8b1344289" },
+    { name: "Abha", role: "Junior Engineer", instagram: "https://www.instagram.com/abhas_2007/", linkedin: "https://www.linkedin.com/in/abha-shelke-835430390/" },
+    { name: "Tathagata", role: "Junior Engineer", linkedin: "https://www.linkedin.com/in/tathagata-roy-0a1b1a20a" },
+    { name: "Shreeya", role: "Junior Engineer", instagram: "https://www.instagram.com/nair_shreeya/", linkedin: "https://www.linkedin.com/in/shreeya-nair-780a63417" },
+    { name: "Parth Lohiya", role: "Junior Engineer", instagram: "https://www.instagram.com/lohiya_parth/", linkedin: "https://www.linkedin.com/in/parthlohiya" },
+    { name: "Arjun Sharma", role: "Junior Engineer", instagram: "https://www.instagram.com/arjun_sharma_20122007/", linkedin: "https://www.linkedin.com/in/arjun-sharma-a5920137a/" },
+  ]},
+  { title: "Perception", members: [
+    { name: "Narendra", role: "Subsystem Lead", instagram: "https://www.instagram.com/n_r_ndr_/", linkedin: "https://www.linkedin.com/in/narendra-aironi/" },
+    { name: "Aarav Gupta", role: "Subsystem Lead", linkedin: "https://www.linkedin.com/in/aarav-gupta-128282202/" },
+    { name: "Cheriyan", role: "Junior Engineer", linkedin: "https://www.linkedin.com/in/cheriyanr200779" }, { name: "Vidit", role: "Junior Engineer", linkedin: "https://www.linkedin.com/in/vidit-nagpurkar/" },
+    { name: "Afnan Ahmed", role: "Junior Engineer", instagram: "https://www.instagram.com/afnanahmed450", linkedin: "https://www.linkedin.com/in/afnan-ahmed-449680374" },
+    { name: "Bhavya Patel", role: "Junior Engineer", instagram: "https://www.instagram.com/_.bhavya.patel_", linkedin: "https://www.linkedin.com/in/bhavya-patel-64014b377/" },
+    { name: "Raunak Raj", role: "Junior Engineer", instagram: "https://www.instagram.com/__newton_raunak", linkedin: "https://www.linkedin.com/in/raunak-raj-89888a313" },
+    { name: "Samarth Charhate", role: "Junior Engineer", linkedin: "https://www.linkedin.com/in/samarth-charhate-0a3491387" },
   ]},
   { title: "Junior Engineers", members: [
-    { name: "Vipul Bansal", role: "Motion Path & Controlling", instagram: "https://www.instagram.com/_vipul_957_/", linkedin: "https://www.linkedin.com/in/vipul-bansal-8b1344289" },
-    { name: "Abha", role: "Motion Path & Controlling", instagram: "https://www.instagram.com/abhas_2007/", linkedin: "https://www.linkedin.com/in/abha-shelke-835430390/" },
-    { name: "Cheriyan", role: "Perception", linkedin: "https://www.linkedin.com/in/cheriyanr200779" }, { name: "Vidit", role: "Perception", linkedin: "https://www.linkedin.com/in/vidit-nagpurkar/" },
-    { name: "Devangi", role: "Aerodynamics", instagram: "https://www.instagram.com/devi.lilvelcro", linkedin: "https://www.linkedin.com/in/devangi-chaudhuri-0a584b242/" },
-    { name: "Afnan Ahmed", role: "Perception", instagram: "https://www.instagram.com/afnanahmed450", linkedin: "https://www.linkedin.com/in/afnan-ahmed-449680374" },
-    { name: "Tathagata", role: "Motion Path & Controlling", linkedin: "https://www.linkedin.com/in/tathagata-roy-0a1b1a20a" },
-    { name: "Bhavya Patel", role: "Perception", instagram: "https://www.instagram.com/_.bhavya.patel_", linkedin: "https://www.linkedin.com/in/bhavya-patel-64014b377/" },
-    { name: "Shreeya", role: "Motion Path & Controlling", instagram: "https://www.instagram.com/nair_shreeya/", linkedin: "https://www.linkedin.com/in/shreeya-nair-780a63417" },
     { name: "Parth Rane", role: "Junior Engineer", instagram: "https://www.instagram.com/parthrane4/", linkedin: "https://www.linkedin.com/in/parth-rane-982622372/" },
-    { name: "Raunak Raj", role: "Perception", instagram: "https://www.instagram.com/__newton_raunak", linkedin: "https://www.linkedin.com/in/raunak-raj-89888a313" },
     { name: "Gaurav", role: "Junior Engineer", instagram: "https://www.instagram.com/gaurav.m_08/", linkedin: "https://www.linkedin.com/in/gaurav-maharana-377453418" },
-    { name: "Parth Lohiya", role: "Motion Path & Controlling", instagram: "https://www.instagram.com/lohiya_parth/", linkedin: "https://www.linkedin.com/in/parthlohiya" },
   ]},
   { title: "Business Team", members: [
     { name: "Satyam", role: "Finance & Logistics", instagram: "https://www.instagram.com/satyamyeola/", linkedin: "https://www.linkedin.com/in/satyamyeola/" },
@@ -258,7 +294,10 @@ const gallery: GalleryShot[] = [
   { src: galleryCrew, alt: "AeRoVe with fellow competing teams in front of a large aircraft at the airfield", caption: "With fellow teams at the airfield" },
 ];
 
+const recruitmentHref = "https://chat.whatsapp.com/EcJH1gLSbQH2U02cy7m4Hk";
+
 const contactRoutes = [
+  { label: "Recruitment", value: "Join our WhatsApp group", href: recruitmentHref, icon: MessageCircle },
   { label: "Sponsorship & partnerships", value: "teamaerove@gmail.com", href: "mailto:teamaerove@gmail.com", icon: IconMailWing },
   { label: "Find us", value: "Desai Sethi School of Entrepreneurship, IIT Bombay", href: "https://maps.google.com/?q=Desai+Sethi+School+of+Entrepreneurship+IIT+Bombay", icon: IconLocation },
 ];
@@ -309,9 +348,15 @@ const blueprintHref = `${import.meta.env.BASE_URL}blueprint/`;
 
 const SLIDE_MS = 5000;
 
-const nav = ["about", "architecture", "team", "achievements", "gallery", "contact"];
-const label = (item: string) => (item === "architecture" ? "System Architecture" : item === "contact" ? "Contact us" : item);
-const stats: [string, string, IconType][] = [["04", "Subsystems", IconHexCluster], ["30+", "Members", IconCrew], ["05", "Global titles", IconTrophy], ["#4", "World rank", IconRank]];
+const nav = ["about", "architecture", "drones", "team", "achievements", "gallery", "contact"];
+const label = (item: string) => (item === "architecture" ? "System Architecture" : item === "drones" ? "Our drones" : item === "contact" ? "Contact us" : item);
+const stats: [string, string, IconType][] = [["04", "Subsystems", IconHexCluster], ["45+", "Members", IconCrew], ["05", "Global titles", IconTrophy], ["#4", "World rank", IconRank]];
+
+const fleet: (Shot & { name: string; kind: string; text: string })[] = [
+  { src: galleryVtol, alt: "AeRoVe fixed-wing VTOL aircraft on the runway", name: "Fixed-wing VTOL", kind: "Hybrid · long range", text: "Takes off and lands vertically like a multirotor, then cruises on its wing for long-distance outdoor missions." },
+  { src: galleryAirdrop, alt: "AeRoVe multirotor with the Air Drop Box payload mounted under its frame", name: "Air-drop multirotor", kind: "Multirotor · payload", text: "Carries a payload box under its frame and releases it precisely over the drop zone." },
+  { src: aeroWing, alt: "Flying wing aircraft configuration", name: "Flying wing", kind: "Fixed wing · efficiency", text: "A tailless planform shaped with CFD to carry more and fly longer on the same battery." },
+];
 
 const missionSteps: [string, string, IconType][] = [
   ["Carry", "The hex mothership ferries the daughter drone to the target zone.", IconHexCluster],
@@ -322,6 +367,7 @@ const missionSteps: [string, string, IconType][] = [
 function Index() {
   const [activeIdx, setActiveIdx] = useState<number | null>(null);
   const active = activeIdx === null ? null : architecture[activeIdx] ?? null;
+  const activeTeam = groups.find((g) => g.title === active?.name)?.members ?? [];
   const [lightboxSet, setLightboxSet] = useState<{ list: Shot[]; i: number } | null>(null);
   const lightbox = lightboxSet ? lightboxSet.list[lightboxSet.i] ?? null : null;
   const openLightbox = (list: Shot[], i = 0) => setLightboxSet({ list, i });
@@ -476,7 +522,6 @@ function Index() {
         <p>Team AeRoVe of UMIC is on a never-ending pursuit of developing an ultimate system of autonomous fixed-wing as well as multirotor aircraft. Incorporating Mechatronics, Aerodynamics, Motion Path &amp; Controlling, Machine Learning and Perception, the team covers every aspect of a complete autonomous aerial vehicle.</p>
         <p>Our purpose is to push the boundaries of autonomous aerial technology and build cutting-edge systems through indigenous innovation — long-distance outdoor navigation, manipulation of large objects, interaction with moving frames of reference and 100% onboard computation.</p>
       </div>
-      <div className="about-visual reveal"><Frame src={roboCollage} alt="RoboDrive 2024 team, aircraft, award ceremony and engineering work" label="Team AeRoVe at RoboDrive" onOpen={() => openLightbox([{ src: roboCollage, alt: "RoboDrive 2024 team, aircraft, award ceremony and engineering work" }])} /></div>
       <div className="principles reveal">
         <article><IconTarget className="principle-icon" /><span>Mission</span><h3>Indigenous systems for fully autonomous flight.</h3></article>
         <article><IconLayers className="principle-icon" /><span>Approach</span><h3>Mechanics, airflow, control and vision as one aircraft.</h3></article>
@@ -485,6 +530,19 @@ function Index() {
 
     <section id="architecture" className="work-section">
       <div className="section-intro light reveal"><div className="section-marker"><IconDroneMark className="marker-icon" /><span>02</span><p>System architecture</p></div><h2>The what and how<br/>of the entire system.</h2></div>
+      <div className="subsystem-grid">{architecture.map((s, i) => (
+        <Button variant="ghost" className="subsystem-card reveal" style={delay(i * 70)} key={s.name} onClick={() => setActiveIdx(i)} aria-label={`Open ${s.name} details`} aria-haspopup="dialog">
+          {s.gallery[0] && <Frame src={s.gallery[0].src} alt={s.gallery[0].alt} label={s.name} />}
+          <span className="subsystem-index">0{i + 1}</span>
+          <span className="subsystem-badge"><s.icon /></span>
+          <span className="subsystem-copy"><span className="subsystem-kicker">{s.kicker}</span><h3>{s.name}</h3></span>
+          <IconArrowOut className="card-arrow" />
+        </Button>
+      ))}</div>
+    </section>
+
+    <section id="drones" className="work-section drones-section">
+      <div className="section-intro light reveal"><div className="section-marker"><IconDroneMark className="marker-icon" /><span>03</span><p>Our drones</p></div><h2>The aircraft<br/>we fly.</h2></div>
       <div className="arch-showcase">
         <div className="arch-brief reveal">
           <p className="arch-lede">A hex-configured mothership carries a daughter drone to the target zone, holds a stable hover while the daughter launches from its back, and returns home as the daughter completes the mission — every stage computed on board.</p>
@@ -497,19 +555,16 @@ function Index() {
         </div>
         <figure className="arch-model reveal"><Drone3D /><figcaption>Live flight model · <span className="on-hover">move your cursor to steer</span><span className="on-touch">drag sideways to steer</span></figcaption></figure>
       </div>
-      <div className="subsystem-grid">{architecture.map((s, i) => (
-        <Button variant="ghost" className="subsystem-card reveal" style={delay(i * 70)} key={s.name} onClick={() => setActiveIdx(i)} aria-label={`Open ${s.name} details`} aria-haspopup="dialog">
-          {s.gallery[0] && <Frame src={s.gallery[0].src} alt={s.gallery[0].alt} label={s.name} />}
-          <span className="subsystem-index">0{i + 1}</span>
-          <span className="subsystem-badge"><s.icon /></span>
-          <span className="subsystem-copy"><span className="subsystem-kicker">{s.kicker}</span><h3>{s.name}</h3></span>
-          <IconArrowOut className="card-arrow" />
-        </Button>
+      <div className="fleet-grid">{fleet.map((d, i) => (
+        <article className="fleet-card reveal" style={delay(i * 70)} key={d.name}>
+          <Frame src={d.src} alt={d.alt} label={d.name} onOpen={() => openLightbox(fleet, i)} />
+          <div className="fleet-copy"><span>{d.kind}</span><h3>{d.name}</h3><p>{d.text}</p></div>
+        </article>
       ))}</div>
     </section>
 
     <section id="team" className="team-section">
-      <div className="section-intro light reveal"><div className="section-marker"><IconDroneMark className="marker-icon" /><span>03</span><p>The people</p></div><h2>30+ minds.<br/>One airspace.</h2></div>
+      <div className="section-intro light reveal"><div className="section-marker"><IconDroneMark className="marker-icon" /><span>04</span><p>The people</p></div><h2>45+ minds.<br/>One airspace.</h2></div>
       <div className="team-filter reveal" role="tablist" aria-label="Filter team by group">
         {teamTabs.map((t) => <button key={t} type="button" role="tab" aria-selected={teamFilter === t} className={teamFilter === t ? "is-on" : ""} onClick={() => setTeamFilter(t)}>{t}<span>{t === "All" ? groups.reduce((n, g) => n + g.members.length, 0) : groups.find((g) => g.title === t)?.members.length}</span></button>)}
       </div>
@@ -527,10 +582,15 @@ function Index() {
           </div>
         </article>)}</div>
       </div>)}
+      <a className="recruit-cta reveal" href={recruitmentHref} target="_blank" rel="noreferrer">
+        <span className="recruit-icon"><MessageCircle /></span>
+        <span><strong>Want to fly with us?</strong><small>Join the AeRoVe recruitment group on WhatsApp</small></span>
+        <IconArrowOut className="recruit-arrow" />
+      </a>
     </section>
 
     <section id="achievements" className="achievements-section">
-      <div className="section-intro light reveal"><div className="section-marker"><IconDroneMark className="marker-icon" /><span>04</span><p>World stage</p></div><h2>Proven in<br/>competition.</h2></div>
+      <div className="section-intro light reveal"><div className="section-marker"><IconDroneMark className="marker-icon" /><span>05</span><p>World stage</p></div><h2>Proven in<br/>competition.</h2></div>
       <div className="achievement-grid">{achievements.map((a, i) => <article className={`achievement-card achievement-${i + 1} reveal`} style={delay(i * 70)} key={a.title}>
         <Frame src={a.photo} alt={`${a.title} team and achievement`} label={a.title} onOpen={() => openLightbox(achievementShots, i)} />
         <span className="achievement-badge" aria-hidden="true"><IconTrophy />{a.badge}</span>
@@ -539,7 +599,7 @@ function Index() {
     </section>
 
     <section id="gallery" className="gallery-section">
-      <div className="section-intro light reveal"><div className="section-marker"><IconDroneMark className="marker-icon" /><span>05</span><p>Gallery</p></div><h2>In the<br/>field.</h2></div>
+      <div className="section-intro light reveal"><div className="section-marker"><IconDroneMark className="marker-icon" /><span>06</span><p>Gallery</p></div><h2>In the<br/>field.</h2></div>
       <div className="gallery-grid">{gallery.map((g, i) => (
         <button type="button" key={g.src} className={`gallery-item reveal`} style={delay((i % 3) * 70)} onClick={() => openLightbox(gallery.map(({ src, caption }) => ({ src, alt: caption })), i)} aria-label={`Enlarge photo: ${g.caption}`}>
           <img src={g.src} alt={g.alt} loading="lazy" />
@@ -550,7 +610,7 @@ function Index() {
     </section>
 
     <section id="contact" className="contact-section">
-      <div className="section-intro light reveal"><div className="section-marker"><IconDroneMark className="marker-icon" /><span>06</span><p>Contact us</p></div><h2>Let&rsquo;s build<br/>what flies next.</h2></div>
+      <div className="section-intro light reveal"><div className="section-marker"><IconDroneMark className="marker-icon" /><span>07</span><p>Contact us</p></div><h2>Let&rsquo;s build<br/>what flies next.</h2></div>
       <div className="contact-layout">
         <div className="contact-lede reveal">
           <p>Sponsors, research groups, companies and students — every aircraft we fly starts with a conversation. Reach the team directly and we reply within a couple of days.</p>
@@ -575,7 +635,6 @@ function Index() {
       <p><span className="brand-name">Team AeRoVe</span> · Aerial Robotics Vehicles · UMIC, IIT Bombay · <a href={blueprintHref} className="footer-link">3D Blueprint</a></p>
       <div className="footer-connect"><img src={umicLogo} alt="UMIC" /><a href="https://www.instagram.com/umic_iitb/reels/?__d=1%3F%2F" target="_blank" rel="noreferrer" aria-label="UMIC Instagram"><Instagram /></a><a href="https://in.linkedin.com/company/unmesh-mashruwala-innovation-cell-iit-bombay" target="_blank" rel="noreferrer" aria-label="UMIC LinkedIn"><Linkedin /></a></div>
     </footer>
-    <section className="closing-motto" aria-label="Our motto"><span>OUR MOTTO</span><p>“A drone is often preferred for missions that are too <em>dull, dirty, or dangerous</em> for manned aircraft.”</p></section>
 
     <a className={`back-to-top ${progress > 0.12 ? "is-shown" : ""}`} href="#top" aria-label="Back to top" tabIndex={progress > 0.12 ? 0 : -1}><IconChevronUp /></a>
 
@@ -587,6 +646,7 @@ function Index() {
         <div className="modal-gallery">{active.gallery.map((g, gi) => <Frame key={g.src} src={g.src} alt={g.alt} label="Gallery" compact onOpen={() => openLightbox(active.gallery, gi)} />)}</div>
         <p className="modal-description">{active.description}</p>
         <div className="tag-row">{active.tags.map(tag => <span key={tag}>{tag}</span>)}</div>
+        {activeTeam.length > 0 && <div className="modal-team"><p className="eyebrow">Team · {activeTeam.length}</p><ul>{activeTeam.map((m) => <li key={m.name}><span className="modal-team-photo">{photoFor(m.name) ? <img src={photoFor(m.name)} alt="" loading="lazy" /> : initials(m.name)}</span><span><strong>{m.name}</strong><small>{m.role}</small></span></li>)}</ul></div>}
         <div className="modal-pager">
           <Button variant="ghost" className="modal-step" onClick={() => step(-1)}><ChevronLeft />{architecture[(activeIdx - 1 + architecture.length) % architecture.length]?.name}</Button>
           <Button variant="ghost" className="modal-step" onClick={() => step(1)}>{architecture[(activeIdx + 1) % architecture.length]?.name}<ChevronRight /></Button>
