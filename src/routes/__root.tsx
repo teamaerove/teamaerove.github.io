@@ -1,7 +1,7 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   Outlet,
-  Link,
+
   createRootRouteWithContext,
   useRouter,
   HeadContent,
@@ -14,22 +14,11 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 
 function NotFoundComponent() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <div className="max-w-md text-center">
-        <h1 className="text-7xl font-bold text-foreground">404</h1>
-        <h2 className="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
-          The page you're looking for doesn't exist or has been moved.
-        </p>
-        <div className="mt-6">
-          <Link
-            to="/"
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-          >
-            Go home
-          </Link>
-        </div>
-      </div>
+    <div className="lost">
+      <p className="kicker"><span>404</span>Signal lost</p>
+      <h1>Off the flight plan.</h1>
+      <p>The page you're looking for doesn't exist or has been moved.</p>
+      <a className="btn btn-primary" href={import.meta.env.BASE_URL}>Return to base</a>
     </div>
   );
 }
@@ -80,7 +69,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { title: "AeRoVe" },
       { name: "description", content: "Aerial robotics at IIT Bombay" },
       { name: "author", content: "Team AeRoVe" },
-      { name: "theme-color", content: "#050b1f" },
+      { name: "theme-color", content: "#0f1011" },
       { property: "og:title", content: "AeRoVe" },
       { property: "og:description", content: "Aerial robotics at IIT Bombay" },
       { property: "og:type", content: "website" },
@@ -93,7 +82,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Audiowide&family=Exo+2:wght@400;500;600;700&family=Oxanium:wght@500;600;700;800&family=Share+Tech+Mono&display=swap" },
+      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..700&display=swap" },
       { rel: "icon", href: `${import.meta.env.BASE_URL}umic-icon-32.png`, type: "image/png", sizes: "32x32" },
       { rel: "icon", href: `${import.meta.env.BASE_URL}umic-icon-192.png`, type: "image/png", sizes: "192x192" },
       { rel: "apple-touch-icon", href: `${import.meta.env.BASE_URL}umic-icon-180.png` },

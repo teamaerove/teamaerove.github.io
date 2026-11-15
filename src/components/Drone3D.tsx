@@ -15,15 +15,15 @@ const W = 600, H = 440, CX = W / 2, CY = H * 0.52, F = 860, D = 6.4, CAM_PITCH =
 const LIGHT = norm([-0.45, 0.8, -0.4]);
 
 const C = {
-  hull: [27, 44, 82] as RGB,
-  canopy: [38, 132, 214] as RGB,
-  arm: [30, 40, 62] as RGB,
-  motor: [150, 170, 200] as RGB,
+  hull: [34, 36, 44] as RGB,
+  canopy: [255, 107, 26] as RGB,
+  arm: [24, 26, 32] as RGB,
+  motor: [170, 178, 190] as RGB,
   blade: [18, 26, 44] as RGB,
-  gear: [60, 76, 104] as RGB,
+  gear: [56, 58, 66] as RGB,
   lens: [10, 16, 30] as RGB,
   daughter: [226, 236, 248] as RGB,
-  disc: [120, 210, 255] as RGB,
+  disc: [255, 170, 110] as RGB,
 };
 
 function norm(v: V3): V3 { const l = Math.hypot(v[0], v[1], v[2]) || 1; return [v[0] / l, v[1] / l, v[2] / l]; }
@@ -131,7 +131,7 @@ function buildFrame(t: number, aim: { x: number; y: number }): Frame {
   const ledPts = leds.map(([p, dir], i) => {
     const [x, y] = project(p!);
     const front = dir![2] < 0;
-    return { x, y, c: i >= 6 ? "#7dd3fc" : front ? "#4ade80" : "#f87171" };
+    return { x, y, c: i >= 6 ? "#19b5f1" : front ? "#4ade80" : "#f87171" };
   });
 
   return { faces, shadows, leds: ledPts, alt: mother.pos[1] - GROUND + d.up * 0.8, yaw: (((yaw * 180) / Math.PI) % 360 + 360) % 360, phase: d.phase };
@@ -153,7 +153,7 @@ function shade(frame: Frame): Drawn[] {
     const rgb = f.color.map((v) => Math.min(255, Math.round(v * k + 255 * spec)));
     const pts = f.pts.map(project);
     const d = "M" + pts.map(([x, y]) => `${x.toFixed(1)} ${y.toFixed(1)}`).join("L") + "Z";
-    out.push({ d, fill: `rgb(${rgb.join(",")})`, opacity: f.alpha, stroke: f.edge ? "rgba(140,220,255,.55)" : "none", z: centroid[2] });
+    out.push({ d, fill: `rgb(${rgb.join(",")})`, opacity: f.alpha, stroke: f.edge ? "rgba(255,170,110,.4)" : "none", z: centroid[2] });
   }
   return out.sort((a, b) => b.z - a.z);
 }
@@ -229,8 +229,8 @@ export function Drone3D({ className = "" }: { className?: string }) {
   return (
     <svg ref={svgRef} className={`drone3d ${className}`} viewBox={`0 0 ${W} ${H}`} role="img" aria-label="Animated 3D model of the AeRoVe hexacopter mothership launching and recovering its daughter drone">
       <defs>
-        <radialGradient id="d3-floor" cx="50%" cy="50%" r="50%"><stop offset="0" stopColor="#7dd3fc" stopOpacity=".35" /><stop offset="1" stopColor="#7dd3fc" stopOpacity="0" /></radialGradient>
-        <radialGradient id="d3-shadow"><stop offset="0" stopColor="#000814" stopOpacity=".9" /><stop offset="1" stopColor="#000814" stopOpacity="0" /></radialGradient>
+        <radialGradient id="d3-floor" cx="50%" cy="50%" r="50%"><stop offset="0" stopColor="#19b5f1" stopOpacity=".35" /><stop offset="1" stopColor="#19b5f1" stopOpacity="0" /></radialGradient>
+        <radialGradient id="d3-shadow"><stop offset="0" stopColor="#000000" stopOpacity=".9" /><stop offset="1" stopColor="#000000" stopOpacity="0" /></radialGradient>
         <mask id="d3-grid-mask"><ellipse cx={CX} cy={project([0, GROUND, 0])[1]} rx={W * 0.48} ry={H * 0.22} fill="url(#d3-floor)" /></mask>
         <filter id="d3-glow" x="-200%" y="-200%" width="500%" height="500%"><feGaussianBlur stdDeviation="3" /></filter>
       </defs>

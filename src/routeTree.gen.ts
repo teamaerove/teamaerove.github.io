@@ -10,11 +10,22 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AchievementsRouteImport } from './routes/achievements'
 import { Route as BlueprintRouteImport } from './routes/blueprint'
+import { Route as ContactRouteImport } from './routes/contact'
+import { Route as FleetRouteImport } from './routes/fleet'
+import { Route as GalleryRouteImport } from './routes/gallery'
+import { Route as SystemsRouteImport } from './routes/systems'
+import { Route as TeamRouteImport } from './routes/team'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AchievementsRoute = AchievementsRouteImport.update({
+  id: '/achievements',
+  path: '/achievements',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BlueprintRoute = BlueprintRouteImport.update({
@@ -22,31 +33,105 @@ const BlueprintRoute = BlueprintRouteImport.update({
   path: '/blueprint',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FleetRoute = FleetRouteImport.update({
+  id: '/fleet',
+  path: '/fleet',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GalleryRoute = GalleryRouteImport.update({
+  id: '/gallery',
+  path: '/gallery',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SystemsRoute = SystemsRouteImport.update({
+  id: '/systems',
+  path: '/systems',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TeamRoute = TeamRouteImport.update({
+  id: '/team',
+  path: '/team',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/achievements': typeof AchievementsRoute
   '/blueprint': typeof BlueprintRoute
+  '/contact': typeof ContactRoute
+  '/fleet': typeof FleetRoute
+  '/gallery': typeof GalleryRoute
+  '/systems': typeof SystemsRoute
+  '/team': typeof TeamRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/achievements': typeof AchievementsRoute
   '/blueprint': typeof BlueprintRoute
+  '/contact': typeof ContactRoute
+  '/fleet': typeof FleetRoute
+  '/gallery': typeof GalleryRoute
+  '/systems': typeof SystemsRoute
+  '/team': typeof TeamRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/achievements': typeof AchievementsRoute
   '/blueprint': typeof BlueprintRoute
+  '/contact': typeof ContactRoute
+  '/fleet': typeof FleetRoute
+  '/gallery': typeof GalleryRoute
+  '/systems': typeof SystemsRoute
+  '/team': typeof TeamRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/blueprint'
+  fullPaths:
+    | '/'
+    | '/achievements'
+    | '/blueprint'
+    | '/contact'
+    | '/fleet'
+    | '/gallery'
+    | '/systems'
+    | '/team'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/blueprint'
-  id: '__root__' | '/' | '/blueprint'
+  to:
+    | '/'
+    | '/achievements'
+    | '/blueprint'
+    | '/contact'
+    | '/fleet'
+    | '/gallery'
+    | '/systems'
+    | '/team'
+  id:
+    | '__root__'
+    | '/'
+    | '/achievements'
+    | '/blueprint'
+    | '/contact'
+    | '/fleet'
+    | '/gallery'
+    | '/systems'
+    | '/team'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AchievementsRoute: typeof AchievementsRoute
   BlueprintRoute: typeof BlueprintRoute
+  ContactRoute: typeof ContactRoute
+  FleetRoute: typeof FleetRoute
+  GalleryRoute: typeof GalleryRoute
+  SystemsRoute: typeof SystemsRoute
+  TeamRoute: typeof TeamRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -58,6 +143,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/achievements': {
+      id: '/achievements'
+      path: '/achievements'
+      fullPath: '/achievements'
+      preLoaderRoute: typeof AchievementsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/blueprint': {
       id: '/blueprint'
       path: '/blueprint'
@@ -65,12 +157,53 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlueprintRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/fleet': {
+      id: '/fleet'
+      path: '/fleet'
+      fullPath: '/fleet'
+      preLoaderRoute: typeof FleetRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/gallery': {
+      id: '/gallery'
+      path: '/gallery'
+      fullPath: '/gallery'
+      preLoaderRoute: typeof GalleryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/systems': {
+      id: '/systems'
+      path: '/systems'
+      fullPath: '/systems'
+      preLoaderRoute: typeof SystemsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/team': {
+      id: '/team'
+      path: '/team'
+      fullPath: '/team'
+      preLoaderRoute: typeof TeamRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AchievementsRoute: AchievementsRoute,
   BlueprintRoute: BlueprintRoute,
+  ContactRoute: ContactRoute,
+  FleetRoute: FleetRoute,
+  GalleryRoute: GalleryRoute,
+  SystemsRoute: SystemsRoute,
+  TeamRoute: TeamRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
