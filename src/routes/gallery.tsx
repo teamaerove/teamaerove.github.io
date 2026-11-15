@@ -36,7 +36,7 @@ function Gallery() {
 
   return (
     <Shell current="gallery">
-      <PageHero index="05" kicker="Gallery" title={<>In the<br />field.</>} image={heroImg}
+      <PageHero index="05" kicker="Gallery" title={<>In the{" "}field.</>} image={heroImg}
         lede="Airfields, hangars, simulators and podiums — a look at where the work actually happens." />
       <section className="band">
         <div className="filter-row" role="tablist" aria-label="Filter photos">

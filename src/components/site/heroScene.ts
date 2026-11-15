@@ -7,8 +7,8 @@ import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPa
 
 /**
  * The home-page flight film: a procedural hex mothership and its daughter quad
- * flying down a valley at dusk. Scroll progress (0..1) drives a four-shot
- * camera move; everything else (terrain, sky, rotors, dust) animates on time.
+ * flying down a valley in clear daylight. Progress (0..1, set per shot by
+ * CineHero) drives a four-shot camera move; everything else animates on time.
  * Browser-only — loaded with a dynamic import from CineHero.
  */
 
@@ -21,12 +21,12 @@ const smooth = (a: number, b: number, x: number) => { const t = Math.min(1, Math
 const smoother = (t: number) => t * t * t * (t * (t * 6 - 15) + 10);
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
-/** Shots: camera orbits the drone (angle from +z, radius, height). `shift` slides the drone off-centre to leave room for copy. */
+/** Shots: camera orbits the drone (angle from +z, radius, height), framed for a contained panel. */
 const SHOTS = [
-  { ang: 0.5, r: 7.0, y: -0.35, look: [0, 0.35, 0], fov: 36, shift: 1 },
-  { ang: 3.9, r: 4.9, y: 1.0, look: [0, 0.15, 0], fov: 32, shift: -1 },
-  { ang: 6.9, r: 5.0, y: 4.4, look: [0, 0.9, 0], fov: 40, shift: 1 },
-  { ang: Math.PI * 2, r: 9.5, y: 2.3, look: [0, -1.6, -14], fov: 52, shift: 0 },
+  { ang: 0.55, r: 6.4, y: -0.1, look: [0, 0.75, 0], fov: 38 },
+  { ang: 3.6, r: 5.8, y: 1.1, look: [0, 0.35, 0], fov: 36 },
+  { ang: 6.6, r: 6.2, y: 2.3, look: [0, 0.9, 0], fov: 40 },
+  { ang: Math.PI * 2 + 0.3, r: 9.5, y: 2.4, look: [0, -0.8, -10], fov: 46 },
 ] as const;
 
 const SKY_GLSL = /* glsl */ `
@@ -34,11 +34,11 @@ const SKY_GLSL = /* glsl */ `
   vec3 skyBase(vec3 d) {
     float h = clamp(d.y, 0.0, 1.0);
     float sunAmt = max(dot(d, SUN), 0.0);
-    // Overcast daylight: pale haze at the horizon, cool grey-blue overhead.
-    vec3 top = vec3(0.20, 0.27, 0.34);
-    vec3 hor = vec3(0.56, 0.58, 0.58) + vec3(0.06, 0.05, 0.03) * pow(sunAmt, 4.0);
-    vec3 c = mix(hor, top, smoothstep(0.0, 0.6, h));
-    c += vec3(1.0, 0.97, 0.9) * pow(sunAmt, 20.0) * 0.12;
+    // Clear daylight: pale haze at the horizon, deeper blue overhead.
+    vec3 top = vec3(0.10, 0.25, 0.52);
+    vec3 hor = vec3(0.62, 0.72, 0.82) + vec3(0.08, 0.07, 0.05) * pow(sunAmt, 4.0);
+    vec3 c = mix(hor, top, smoothstep(0.0, 0.55, h));
+    c += vec3(1.0, 0.97, 0.9) * pow(sunAmt, 20.0) * 0.15;
     return c;
   }
 `;
@@ -55,11 +55,11 @@ const NOISE_GLSL = /* glsl */ `
 
 function makeMaterials() {
   return {
-    carbon: new THREE.MeshStandardMaterial({ color: 0x15181d, metalness: 0.65, roughness: 0.34 }),
-    plate: new THREE.MeshStandardMaterial({ color: 0x262b33, metalness: 0.9, roughness: 0.28 }),
-    metal: new THREE.MeshStandardMaterial({ color: 0xaab3c0, metalness: 1, roughness: 0.22 }),
-    accent: new THREE.MeshPhysicalMaterial({ color: 0x0b6fa8, metalness: 0.25, roughness: 0.22, clearcoat: 1, clearcoatRoughness: 0.12 }),
-    shell: new THREE.MeshPhysicalMaterial({ color: 0xe9edf2, metalness: 0.1, roughness: 0.3, clearcoat: 1, clearcoatRoughness: 0.2 }),
+    carbon: new THREE.MeshStandardMaterial({ color: 0x1b1e23, metalness: 0.25, roughness: 0.62 }),
+    plate: new THREE.MeshStandardMaterial({ color: 0x2c3138, metalness: 0.5, roughness: 0.5 }),
+    metal: new THREE.MeshStandardMaterial({ color: 0x9aa3ae, metalness: 0.85, roughness: 0.38 }),
+    accent: new THREE.MeshPhysicalMaterial({ color: 0x24456e, metalness: 0.2, roughness: 0.48, clearcoat: 0.35, clearcoatRoughness: 0.4 }),
+    shell: new THREE.MeshPhysicalMaterial({ color: 0xe4e7eb, metalness: 0.05, roughness: 0.5, clearcoat: 0.3, clearcoatRoughness: 0.45 }),
     lens: new THREE.MeshPhysicalMaterial({ color: 0x05070a, metalness: 0.9, roughness: 0.05, clearcoat: 1 }),
     blade: new THREE.MeshBasicMaterial({ color: 0x0b0d10, transparent: true, opacity: 0.45, depthWrite: false }),
     disc: new THREE.MeshBasicMaterial({ color: 0x1a1c1e, transparent: true, opacity: 0.16, depthWrite: false, side: THREE.DoubleSide }),
@@ -174,7 +174,7 @@ export function createHeroScene(canvas: HTMLCanvasElement, opts: Options): HeroH
           vec3 p = position;
           vec2 w = p.xz + uOffset;
           float valley = smoothstep(5.0, 46.0, abs(p.x + sin(w.y * 0.02) * 6.0));
-          float h = fbm(w * 0.034) * 34.0 * valley + fbm(w * 0.16) * 1.1;
+          float h = fbm(w * 0.03) * 17.0 * valley + fbm(w * 0.16) * 1.1;
           p.y += h;
           vH = h; vMap = w;
           vec4 world = modelMatrix * vec4(p, 1.0);
@@ -193,13 +193,18 @@ export function createHeroScene(canvas: HTMLCanvasElement, opts: Options): HeroH
           float dist = length(toFrag);
           vec3 dir = toFrag / dist;
           // Muted valley floor, darker ridges, a faint survey grid.
-          vec3 base = mix(vec3(0.075, 0.085, 0.065), vec3(0.15, 0.15, 0.13), smoothstep(0.0, 28.0, vH));
+          vec3 base = mix(vec3(0.16, 0.22, 0.13), vec3(0.34, 0.32, 0.27), smoothstep(2.0, 15.0, vH));
+          // Slope lighting from screen-space derivatives: gives the hills relief.
+          vec3 nrm = normalize(cross(dFdx(vWorld), dFdy(vWorld)));
+          if (nrm.y < 0.0) nrm = -nrm;
+          float lit = 0.45 + 0.75 * max(dot(nrm, normalize(vec3(-0.45, 0.75, -0.5))), 0.0);
+          base *= lit;
           float lines = grid(vMap, 4.0) * 0.35 + grid(vMap, 20.0) * 0.55;
-          vec3 col = mix(base, vec3(0.03, 0.035, 0.03), lines * 0.45 * smoothstep(110.0, 8.0, dist));
+          vec3 col = mix(base, vec3(0.03, 0.035, 0.03), lines * 0.22 * smoothstep(90.0, 8.0, dist));
           // Perception sweep: a ring that expands across the valley floor.
           float ring = abs(length(vWorld.xz) - mod(uTime * 9.0, 46.0));
           col = mix(col, vec3(0.02, 0.32, 0.55), uScan * smoothstep(1.2, 0.0, ring) * 0.8);
-          float fog = 1.0 - exp(-dist * dist * 0.00006);
+          float fog = 1.0 - exp(-dist * dist * 0.000045);
           col = mix(col, skyBase(normalize(vec3(dir.x, 0.012, dir.z))), fog);
           gl_FragColor = vec4(col, 1.0);
         }`,
@@ -270,14 +275,11 @@ export function createHeroScene(canvas: HTMLCanvasElement, opts: Options): HeroH
     const i = Math.floor(f), k = smoother(f - i);
     const a = SHOTS[i]!, b = SHOTS[i + 1]!;
     const ang = lerp(a.ang, b.ang, k) + mouse.x * 0.09 + Math.sin(t * 0.21) * 0.035;
-    const r = lerp(a.r, b.r, k) * (camera.aspect < 0.8 ? 1.5 : 1);
+    const r = lerp(a.r, b.r, k) * (camera.aspect < 1 ? 1.35 : 1);
     camera.position.set(Math.sin(ang) * r, lerp(a.y, b.y, k) - mouse.y * 0.3 + Math.sin(t * 0.33) * 0.08, Math.cos(ang) * r);
     look.set(lerp(a.look[0], b.look[0], k), lerp(a.look[1], b.look[1], k), lerp(a.look[2], b.look[2], k));
     camera.lookAt(look);
     camera.fov = lerp(a.fov, b.fov, k);
-    const shift = lerp(a.shift, b.shift, k);
-    if (camera.aspect > 1.05) camera.setViewOffset(width, height, -shift * width * 0.17, height * 0.02, width, height);
-    else camera.setViewOffset(width, height, 0, height * 0.14, width, height);
     camera.updateProjectionMatrix();
 
     // Mothership: forward-pitched cruise with a slow hover drift.

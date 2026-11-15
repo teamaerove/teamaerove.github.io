@@ -25,11 +25,11 @@ function Fleet() {
 
   return (
     <Shell current="fleet">
-      <PageHero index="02" kicker="Our drones" title={<>The aircraft<br />we fly.</>} image={heroImg}
+      <PageHero index="02" kicker="Our drones" title={<>The aircraft{" "}we fly.</>} image={heroImg}
         lede="Multirotors that carry and deploy, fixed wings that cover distance, and a hybrid that does both — each one designed, built and flown by the team." />
 
       <section className="band">
-        <SectionHead index="A" kicker="Flagship" title={<>Mothership &amp;<br />daughter.</>} />
+        <SectionHead index="A" kicker="Flagship" title={<>Mothership &amp;{" "}daughter.</>} />
         <div className="flagship">
           <div className="flagship-brief reveal">
             <p className="lede">A hex-configured mothership carries a daughter drone to the target zone, holds a stable hover while the daughter launches from its back, and returns home as the daughter completes the mission — every stage computed on board.</p>
@@ -56,7 +56,7 @@ function Fleet() {
       </section>
 
       <section className="band">
-        <SectionHead index="B" kicker="Hangar" title={<>Built for<br />every mission.</>} />
+        <SectionHead index="B" kicker="Hangar" title={<>Built for{" "}every mission.</>} />
         <div className="fleet-grid">
           {fleet.map((d, i) => (
             <article className="fleet-card reveal" style={delay(i * 80)} key={d.name}>

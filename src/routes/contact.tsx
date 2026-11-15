@@ -41,7 +41,7 @@ function Contact() {
 
   return (
     <Shell current="contact">
-      <PageHero index="06" kicker="Contact us" title={<>Let&rsquo;s build<br />what flies next.</>} image={heroImg}
+      <PageHero index="06" kicker="Contact us" title={<>Let&rsquo;s build{" "}what flies next.</>} image={heroImg}
         lede="Sponsors, research groups, companies and students — every aircraft we fly starts with a conversation. Reach the team directly and we reply within a couple of days." />
 
       <section className="band contact-band">

@@ -26,7 +26,7 @@ function Achievements() {
 
   return (
     <Shell current="achievements">
-      <PageHero index="04" kicker="World stage" title={<>Proven in<br />competition.</>} image={heroImg}
+      <PageHero index="04" kicker="World stage" title={<>Proven in{" "}competition.</>} image={heroImg}
         lede="From Purdue to the IMechE UAS Challenge and ICRA, AeRoVe's aircraft have been tested against the best student teams in the world — and flown the flag home." />
 
       <section className="band">

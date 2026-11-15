@@ -33,8 +33,7 @@ function Home() {
           {stats.map(([n, l, Icon], i) => (
             <div key={l} className="stat reveal" style={delay(i * 80)}>
               <Icon className="stat-icon" />
-              <strong><CountUp value={n} start={statsSeen} /></strong>
-              <span>{l}</span>
+              <div><strong><CountUp value={n} start={statsSeen} /></strong><span>{l}</span></div>
             </div>
           ))}
         </div>
@@ -42,9 +41,11 @@ function Home() {
 
       <section className="band motto">
         <div className="motto-grid">
-          <p className="kicker reveal"><span>01</span>Our motto</p>
           <div className="reveal">
+            <p className="kicker">Our motto</p>
             <h2 className="motto-quote">“A drone is often preferred for missions that are too <em>dull, dirty, or dangerous</em> for manned aircraft.”</h2>
+          </div>
+          <div className="reveal">
             <p className="lede">Team AeRoVe of UMIC is on a never-ending pursuit of developing an ultimate system of autonomous fixed-wing as well as multirotor aircraft. Incorporating Mechatronics, Aerodynamics, Motion Path &amp; Controlling, Machine Learning and Perception, the team covers every aspect of a complete autonomous aerial vehicle.</p>
             <p className="lede">Our purpose is to push the boundaries of autonomous aerial technology through indigenous innovation — long-distance outdoor navigation, manipulation of large objects, interaction with moving frames of reference and 100% onboard computation.</p>
           </div>
@@ -56,7 +57,7 @@ function Home() {
       </section>
 
       <section className="band">
-        <SectionHead index="02" kicker="System architecture" title={<>Four subsystems.<br />One aircraft.</>}>
+        <SectionHead index="02" kicker="System architecture" title={<>Four subsystems.{" "}One aircraft.</>}>
           <a className="text-link" href={href("systems")}>All systems<IconArrowOut /></a>
         </SectionHead>
         <div className="sys-teaser">
@@ -73,7 +74,7 @@ function Home() {
       </section>
 
       <section className="band record">
-        <SectionHead index="03" kicker="World stage" title={<>Proven in<br />competition.</>}>
+        <SectionHead index="03" kicker="World stage" title={<>Proven in{" "}competition.</>}>
           <a className="text-link" href={href("achievements")}>Full record<IconArrowOut /></a>
         </SectionHead>
         <div className="marquee" aria-label="Competition record">
@@ -91,7 +92,7 @@ function Home() {
       <section className="band">
         <a className="mega-cta reveal" href={recruitmentHref} target="_blank" rel="noreferrer">
           <span className="kicker"><span>04</span>Recruitment</span>
-          <strong>Want to fly<br />with us?</strong>
+          <strong>Want to fly{" "}with us?</strong>
           <span className="mega-cta-sub"><MessageCircle />Join the AeRoVe recruitment group on WhatsApp<IconArrowOut /></span>
         </a>
       </section>

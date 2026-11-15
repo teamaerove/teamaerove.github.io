@@ -137,17 +137,14 @@ export function SectionHead({ index, kicker, title, children }: { index: string;
 /* Inner-page hero ------------------------------------------------------ */
 export function PageHero({ index, kicker, title, lede, image, children }: { index: string; kicker: string; title: ReactNode; lede: string; image?: string; children?: ReactNode }) {
   return (
-    <header className="page-hero">
-      {image && <img className="page-hero-img" src={image} alt="" fetchPriority="high" />}
-      <div className="page-hero-veil" aria-hidden="true" />
-      <div className="page-hero-grid" aria-hidden="true" />
+    <header className={`page-hero ${image ? "has-image" : ""}`}>
       <div className="page-hero-inner">
-        <p className="kicker"><span>{index}</span>{kicker}</p>
+        <p className="hero-eyebrow" data-index={index}>{kicker}</p>
         <h1>{title}</h1>
         <p className="page-hero-lede">{lede}</p>
         {children}
       </div>
-      <span className="page-hero-coord" aria-hidden="true">19.1334° N · 72.9133° E — IIT BOMBAY</span>
+      {image && <div className="page-hero-media"><img src={image} alt="" fetchPriority="high" /></div>}
     </header>
   );
 }

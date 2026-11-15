@@ -21,7 +21,7 @@ function Systems() {
 
   return (
     <Shell current="systems">
-      <PageHero index="01" kicker="System architecture" title={<>The what and how<br />of the entire system.</>} image={heroImg}
+      <PageHero index="01" kicker="System architecture" title={<>The what and how{" "}of the entire system.</>} image={heroImg}
         lede="Every aircraft is the sum of four subsystems that design, simulate and fly together. Structures carry the load, airflow keeps it efficient, control holds the line and vision tells it where to go.">
         <nav className="chip-row" aria-label="Jump to subsystem">
           {architecture.map((s, i) => <a key={s.name} className="chip" href={`#${slugOf(s.name)}`}><span>0{i + 1}</span>{s.name}</a>)}

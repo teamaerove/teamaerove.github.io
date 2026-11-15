@@ -35,7 +35,7 @@ function Team() {
 
   return (
     <Shell current="team">
-      <PageHero index="03" kicker="The people" title={<>{total} minds.<br />One airspace.</>} image={heroImg}
+      <PageHero index="03" kicker="The people" title={<>{total} minds.{" "}One airspace.</>} image={heroImg}
         lede="Engineers, designers and organisers across every year of study. Find someone by name or role, or browse by subsystem." />
 
       <section className="band team-band">
