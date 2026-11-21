@@ -286,7 +286,7 @@ p { text-wrap: pretty; }
 .sys-ghost { display: none; }
 
 /* fleet --------------------------------------------------------------- */
-.flagship { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: clamp(2rem, 5vw, 4rem); align-items: start; }
+.flagship { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: clamp(2rem, 5vw, 4rem); align-items: start; }
 .flagship-brief .lede { margin-top: 0; }
 .spec-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; margin: 1.75rem 0; }
 .spec-grid div { padding: .8rem 1rem; border-radius: var(--r-sm); background: var(--bg-2); }

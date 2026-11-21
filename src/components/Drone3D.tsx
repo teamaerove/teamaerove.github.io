@@ -16,14 +16,14 @@ const LIGHT = norm([-0.45, 0.8, -0.4]);
 
 const C = {
   hull: [34, 36, 44] as RGB,
-  canopy: [255, 107, 26] as RGB,
+  canopy: [29, 111, 216] as RGB,
   arm: [24, 26, 32] as RGB,
   motor: [170, 178, 190] as RGB,
   blade: [18, 26, 44] as RGB,
   gear: [56, 58, 66] as RGB,
   lens: [10, 16, 30] as RGB,
   daughter: [226, 236, 248] as RGB,
-  disc: [255, 170, 110] as RGB,
+  disc: [150, 200, 255] as RGB,
 };
 
 function norm(v: V3): V3 { const l = Math.hypot(v[0], v[1], v[2]) || 1; return [v[0] / l, v[1] / l, v[2] / l]; }
@@ -153,7 +153,7 @@ function shade(frame: Frame): Drawn[] {
     const rgb = f.color.map((v) => Math.min(255, Math.round(v * k + 255 * spec)));
     const pts = f.pts.map(project);
     const d = "M" + pts.map(([x, y]) => `${x.toFixed(1)} ${y.toFixed(1)}`).join("L") + "Z";
-    out.push({ d, fill: `rgb(${rgb.join(",")})`, opacity: f.alpha, stroke: f.edge ? "rgba(255,170,110,.4)" : "none", z: centroid[2] });
+    out.push({ d, fill: `rgb(${rgb.join(",")})`, opacity: f.alpha, stroke: f.edge ? "rgba(150,200,255,.45)" : "none", z: centroid[2] });
   }
   return out.sort((a, b) => b.z - a.z);
 }

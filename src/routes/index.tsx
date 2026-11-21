@@ -1,9 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { IconArrowOut } from "@/components/icons";
+import { Drone3D } from "@/components/Drone3D";
+import { IconArrowOut, IconBlueprint } from "@/components/icons";
 import { DroneVision } from "@/components/site/DroneVision";
 import { CountUp, SectionHead, Shell, delay, href, useInView, useReveal } from "@/components/site/Shell";
-import { achievements, architecture, slugOf, stats } from "@/lib/siteData";
+import { achievements, architecture, missionSteps, slugOf, stats } from "@/lib/siteData";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -48,6 +49,32 @@ function Home() {
             <div key={l}><dt>{l}</dt><dd><CountUp value={n} start={statsSeen} /></dd></div>
           ))}
         </dl>
+      </section>
+
+      <section className="band">
+        <SectionHead index="01" kicker="How our drone works" title="Mothership and daughter" />
+        <div className="flagship">
+          <figure className="flagship-model reveal">
+            <Drone3D />
+            <figcaption>Live 3D model · <span className="on-hover">move your cursor to steer</span><span className="on-touch">drag sideways to steer</span></figcaption>
+          </figure>
+          <div className="flagship-brief reveal">
+            <p className="lede">A hex-configured mothership carries a daughter drone to the target zone, holds a stable hover while the daughter launches from its back, and brings it home after the mission. Every stage is computed on board.</p>
+            <ol className="mission-steps">
+              {missionSteps.map(([title, text, Icon], i) => (
+                <li key={title}>
+                  <span className="mission-icon"><Icon /></span>
+                  <div><strong><em>0{i + 1}</em>{title}</strong><p>{text}</p></div>
+                </li>
+              ))}
+            </ol>
+            <a href={href("blueprint")} className="blueprint-cta">
+              <span className="blueprint-cta-icon"><IconBlueprint /></span>
+              <span><strong>Open the 3D blueprint</strong><small>Inspect 40+ components, fly it, explode the assembly</small></span>
+              <IconArrowOut className="blueprint-cta-arrow" />
+            </a>
+          </div>
+        </div>
       </section>
 
       <section className="band">
