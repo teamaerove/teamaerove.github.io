@@ -37,12 +37,15 @@ export function BlueprintCanvas({
   hovered,
   setHovered,
   onTelemetry,
+  zoom = true,
 }: {
   controls: React.MutableRefObject<Controls>;
   exploded: boolean;
   hovered: HoverState | null;
   setHovered: (h: HoverState | null) => void;
   onTelemetry: (t: Telemetry) => void;
+  /** Off when embedded in a scrolling page, so the wheel scrolls the page. */
+  zoom?: boolean;
 }) {
   const controlsRef = useRef<React.ComponentRef<typeof OrbitControls>>(null);
 
@@ -69,6 +72,7 @@ export function BlueprintCanvas({
         <OrbitControls
           ref={controlsRef}
           enableDamping
+          enableZoom={zoom}
           dampingFactor={0.08}
           zoomToCursor
           enablePan

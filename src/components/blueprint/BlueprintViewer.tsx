@@ -13,9 +13,12 @@ import "./blueprint.css";
 export default function BlueprintViewer({
   height = "100vh",
   topInset = 0,
+  embedded = false,
 }: {
   height?: number | string;
   topInset?: number;
+  /** Inside a scrolling page: no wheel zoom, no global keyboard flying. */
+  embedded?: boolean;
 }) {
   const controls = useRef<Controls>({ throttle: 0, yaw: 0, pitch: 0, roll: 0 });
   const [exploded, setExploded] = useState(false);
@@ -36,6 +39,7 @@ export default function BlueprintViewer({
           hovered={hovered}
           setHovered={setHovered}
           onTelemetry={setTelemetry}
+          zoom={!embedded}
         />
         <TelemetryHUD telemetry={telemetry} />
         <ControllerPanel
@@ -44,9 +48,10 @@ export default function BlueprintViewer({
           exploded={exploded}
           onToggleExploded={() => setExploded((v) => !v)}
           onResetView={() => window.location.reload()}
+          keyboard={!embedded}
         />
         <p className="bp-hint" style={{ top: 12 + topInset }}>
-          Hover any part to inspect it · drag to orbit · scroll to zoom
+          {embedded ? "Hover any part to inspect it · drag to orbit · Explode to see inside" : "Hover any part to inspect it · drag to orbit · scroll to zoom"}
         </p>
         {hovered && (
           <div

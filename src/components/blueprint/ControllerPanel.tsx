@@ -69,17 +69,20 @@ export function ControllerPanel({
   exploded,
   onToggleExploded,
   onResetView,
+  keyboard = true,
 }: {
   controls: React.MutableRefObject<Controls>;
   telemetry: Telemetry;
   exploded: boolean;
   onToggleExploded: () => void;
   onResetView: () => void;
+  keyboard?: boolean;
 }) {
   const [collapsed, setCollapsed] = useState(false);
 
   // keyboard: W/S throttle, A/D yaw, arrows pitch/roll
   useEffect(() => {
+    if (!keyboard) return;
     const down = (e: KeyboardEvent) => {
       const c = controls.current;
       const step = 0.15;
@@ -104,7 +107,7 @@ export function ControllerPanel({
       window.removeEventListener("keydown", down);
       window.removeEventListener("keyup", up);
     };
-  }, [controls]);
+  }, [controls, keyboard]);
 
   if (collapsed) {
     return (
