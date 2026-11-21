@@ -3,8 +3,10 @@ import { createFileRoute } from "@tanstack/react-router";
 import { IconArrowOut } from "@/components/icons";
 import { BlueprintEmbed } from "@/components/site/BlueprintEmbed";
 import { DroneVision } from "@/components/site/DroneVision";
-import { CountUp, SectionHead, Shell, delay, href, useInView, useReveal } from "@/components/site/Shell";
+import { CountUp, Shell, delay, href, useInView, useReveal } from "@/components/site/Shell";
 import { achievements, architecture, missionSteps, slugOf, stats } from "@/lib/siteData";
+import heroImg from "@/assets/hero-full-squad.jpg";
+import closingImg from "@/assets/aerove-2.png";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -23,6 +25,13 @@ export const Route = createFileRoute("/")({
 const year = (title: string) => title.match(/\d{4}/)?.[0] ?? "";
 const eventName = (title: string) => title.replace(/\s*\d{4}$/, "");
 
+const focus: [string, string][] = [
+  ["Long-range navigation", "Outdoor missions flown beyond line of sight, with planning and control on board."],
+  ["Heavy payloads", "Airframes and grippers designed to carry, drop and recover large objects."],
+  ["Moving platforms", "Launching from and landing on frames of reference that are themselves in motion."],
+  ["Onboard compute", "Perception, planning and control run on the aircraft. Nothing is offloaded."],
+];
+
 function Home() {
   useReveal();
   const [statsRef, statsSeen] = useInView<HTMLDListElement>();
@@ -30,74 +39,90 @@ function Home() {
   return (
     <Shell current="" overlayNav>
       <header className="hero">
-        <div className="hero-copy">
+        <img className="hero-bg" src={heroImg} alt="Team AeRoVe on the flight line with their multirotor aircraft" fetchPriority="high" />
+        <div className="hero-inner">
+          <p className="hero-eyebrow">UMIC · IIT Bombay</p>
           <h1>Team AeRoVe</h1>
-          <p className="hero-sub">Aerial Robotics Vehicles · UMIC, IIT Bombay</p>
-          <p className="hero-lede">We are a student team that designs, builds and flies autonomous drones, from the airframe and flight controller to the onboard vision, and takes them to international competitions.</p>
+          <p className="hero-sub">Aerial Robotics Vehicles</p>
+          <p className="hero-lede">A student team that designs, builds and flies autonomous drones, and takes them to international competitions.</p>
           <div className="hero-actions">
-            <a className="btn btn-primary" href={href("systems")}>See our work<IconArrowOut /></a>
+            <a className="btn btn-primary" href={href("systems")}>See our work</a>
             <a className="btn btn-ghost" href={href("contact")}>Contact us</a>
           </div>
-          <a className="hero-blueprint" href={href("blueprint")}>Explore a drone in 3D<IconArrowOut /></a>
         </div>
-        <DroneVision />
+        <a className="hero-cue" href="#impact" aria-label="Scroll to content"><span /></a>
       </header>
 
-      <section className="band figures-band">
+      <section id="impact" className="band impact">
         <dl ref={statsRef} className="figures">
           {stats.map(([n, l]) => (
-            <div key={l}><dt>{l}</dt><dd><CountUp value={n} start={statsSeen} /></dd></div>
+            <div key={l}><dd><CountUp value={n} start={statsSeen} /></dd><dt>{l}</dt></div>
           ))}
         </dl>
       </section>
 
       <section className="band">
-        <SectionHead index="01" kicker="How our drone works" title="Explore the drone, part by part">
-          <a className="text-link" href={href("blueprint")}>Open full screen<IconArrowOut /></a>
-        </SectionHead>
-        <p className="lede bp-lede">Hover any component to see what it does and its spec. Use Explode to separate the assembly, drag to turn it, and fly it with the on-screen sticks.</p>
+        <div className="split">
+          <div className="reveal">
+            <p className="kicker">Our mission</p>
+            <h2>Aircraft that see, decide and fly on their own</h2>
+            <p className="lede">“A drone is often preferred for missions that are too <em>dull, dirty, or dangerous</em> for manned aircraft.” With subsystems for Mechatronics, Aerodynamics, Motion Path &amp; Controlling and Perception, the team covers every part of a complete autonomous aerial vehicle.</p>
+          </div>
+          <ul className="focus">
+            {focus.map(([t, d], i) => (
+              <li key={t} className="reveal" style={delay(i * 70)}><h3>{t}</h3><p>{d}</p></li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      <section className="band">
+        <div className="section-title reveal">
+          <p className="kicker">How our drone works</p>
+          <h2>Explore the drone, part by part</h2>
+          <p className="lede">Hover any component to see what it does and its spec. Use Explode to separate the assembly, drag to turn it, and fly it with the on-screen sticks. <a className="text-link" href={href("blueprint")}>Open full screen<IconArrowOut /></a></p>
+        </div>
         <BlueprintEmbed />
-        <ol className="mission-steps mission-row">
-          {missionSteps.map(([title, text, Icon], i) => (
-            <li key={title}>
-              <span className="mission-icon"><Icon /></span>
-              <div><strong><em>0{i + 1}</em>{title}</strong><p>{text}</p></div>
-            </li>
+        <ol className="steps">
+          {missionSteps.map(([title, text], i) => (
+            <li key={title}><span>0{i + 1}</span><h3>{title}</h3><p>{text}</p></li>
           ))}
         </ol>
       </section>
 
       <section className="band">
-        <div className="motto-grid">
+        <div className="split split-vision">
           <div className="reveal">
-            <p className="kicker">Our motto</p>
-            <h2 className="motto-quote">“A drone is often preferred for missions that are too <em>dull, dirty, or dangerous</em> for manned aircraft.”</h2>
+            <p className="kicker">Perception</p>
+            <h2>What our drones see</h2>
+            <p className="lede">Learning-based vision finds people, aircraft and targets in the camera feed and places them in 3D using depth, at 30 frames per second on board.</p>
+            <a className="text-link" href={`${href("systems")}#perception`}>Perception subsystem<IconArrowOut /></a>
           </div>
-          <div className="reveal">
-            <p className="lede">Team AeRoVe of UMIC works on autonomous fixed-wing and multirotor aircraft. With subsystems for Mechatronics, Aerodynamics, Motion Path &amp; Controlling and Perception, the team covers every part of a complete autonomous aerial vehicle.</p>
-            <p className="lede">Our focus areas are long-distance outdoor navigation, handling large payloads, interacting with moving frames of reference, and running every computation on board.</p>
-          </div>
+          <DroneVision />
         </div>
       </section>
 
       <section className="band">
-        <SectionHead index="02" kicker="What we work on" title="Four subsystems, one aircraft">
-          <a className="text-link" href={href("systems")}>All systems<IconArrowOut /></a>
-        </SectionHead>
-        <div className="sys-teaser">
+        <div className="section-title reveal">
+          <p className="kicker">Our subsystems</p>
+          <h2>Four teams, one aircraft</h2>
+        </div>
+        <div className="subsystems">
           {architecture.map((s, i) => (
-            <a key={s.name} className="sys-tile reveal" style={delay(i * 60)} href={`${href("systems")}#${slugOf(s.name)}`}>
+            <a key={s.name} className="subsystem reveal" style={delay(i * 60)} href={`${href("systems")}#${slugOf(s.name)}`}>
               <img src={s.gallery[0]!.src} alt={s.gallery[0]!.alt} loading="lazy" />
-              <span className="sys-tile-copy"><strong>{s.name}</strong><small>{s.kicker}</small></span>
+              <h3>{s.name}</h3>
+              <p>{s.kicker}</p>
             </a>
           ))}
         </div>
       </section>
 
       <section className="band">
-        <SectionHead index="03" kicker="Competitions" title="Recent results">
-          <a className="text-link" href={href("achievements")}>Full record<IconArrowOut /></a>
-        </SectionHead>
+        <div className="section-title reveal">
+          <p className="kicker">Competitions</p>
+          <h2>Recent results</h2>
+        </div>
         <ol className="results reveal">
           {achievements.map((a) => (
             <li key={a.title}>
@@ -108,15 +133,15 @@ function Home() {
             </li>
           ))}
         </ol>
+        <a className="text-link results-more" href={href("achievements")}>Full record<IconArrowOut /></a>
       </section>
 
-      <section className="band">
-        <div className="closing reveal">
-          <div>
-            <h2>Work with us</h2>
-            <p>We partner with sponsors, labs and companies on hardware, testing and research. Write to <a href="mailto:teamaerove@gmail.com">teamaerove@gmail.com</a>.</p>
-          </div>
-          <a className="btn btn-primary" href={href("contact")}>Get in touch<IconArrowOut /></a>
+      <section className="closing">
+        <img className="closing-bg" src={closingImg} alt="" loading="lazy" />
+        <div className="closing-inner reveal">
+          <h2>Join our journey</h2>
+          <p>We partner with sponsors, labs and companies on hardware, testing and research.</p>
+          <a className="btn btn-primary" href={href("contact")}>Partner with us</a>
         </div>
       </section>
     </Shell>

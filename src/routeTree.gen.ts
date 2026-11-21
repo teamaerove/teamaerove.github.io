@@ -14,7 +14,6 @@ import { Route as AchievementsRouteImport } from './routes/achievements'
 import { Route as BlueprintRouteImport } from './routes/blueprint'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as FleetRouteImport } from './routes/fleet'
-import { Route as GalleryRouteImport } from './routes/gallery'
 import { Route as SystemsRouteImport } from './routes/systems'
 import { Route as TeamRouteImport } from './routes/team'
 
@@ -43,11 +42,6 @@ const FleetRoute = FleetRouteImport.update({
   path: '/fleet',
   getParentRoute: () => rootRouteImport,
 } as any)
-const GalleryRoute = GalleryRouteImport.update({
-  id: '/gallery',
-  path: '/gallery',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const SystemsRoute = SystemsRouteImport.update({
   id: '/systems',
   path: '/systems',
@@ -65,7 +59,6 @@ export interface FileRoutesByFullPath {
   '/blueprint': typeof BlueprintRoute
   '/contact': typeof ContactRoute
   '/fleet': typeof FleetRoute
-  '/gallery': typeof GalleryRoute
   '/systems': typeof SystemsRoute
   '/team': typeof TeamRoute
 }
@@ -75,7 +68,6 @@ export interface FileRoutesByTo {
   '/blueprint': typeof BlueprintRoute
   '/contact': typeof ContactRoute
   '/fleet': typeof FleetRoute
-  '/gallery': typeof GalleryRoute
   '/systems': typeof SystemsRoute
   '/team': typeof TeamRoute
 }
@@ -86,7 +78,6 @@ export interface FileRoutesById {
   '/blueprint': typeof BlueprintRoute
   '/contact': typeof ContactRoute
   '/fleet': typeof FleetRoute
-  '/gallery': typeof GalleryRoute
   '/systems': typeof SystemsRoute
   '/team': typeof TeamRoute
 }
@@ -98,7 +89,6 @@ export interface FileRouteTypes {
     | '/blueprint'
     | '/contact'
     | '/fleet'
-    | '/gallery'
     | '/systems'
     | '/team'
   fileRoutesByTo: FileRoutesByTo
@@ -108,7 +98,6 @@ export interface FileRouteTypes {
     | '/blueprint'
     | '/contact'
     | '/fleet'
-    | '/gallery'
     | '/systems'
     | '/team'
   id:
@@ -118,7 +107,6 @@ export interface FileRouteTypes {
     | '/blueprint'
     | '/contact'
     | '/fleet'
-    | '/gallery'
     | '/systems'
     | '/team'
   fileRoutesById: FileRoutesById
@@ -129,7 +117,6 @@ export interface RootRouteChildren {
   BlueprintRoute: typeof BlueprintRoute
   ContactRoute: typeof ContactRoute
   FleetRoute: typeof FleetRoute
-  GalleryRoute: typeof GalleryRoute
   SystemsRoute: typeof SystemsRoute
   TeamRoute: typeof TeamRoute
 }
@@ -171,13 +158,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FleetRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/gallery': {
-      id: '/gallery'
-      path: '/gallery'
-      fullPath: '/gallery'
-      preLoaderRoute: typeof GalleryRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/systems': {
       id: '/systems'
       path: '/systems'
@@ -201,7 +181,6 @@ const rootRouteChildren: RootRouteChildren = {
   BlueprintRoute: BlueprintRoute,
   ContactRoute: ContactRoute,
   FleetRoute: FleetRoute,
-  GalleryRoute: GalleryRoute,
   SystemsRoute: SystemsRoute,
   TeamRoute: TeamRoute,
 }

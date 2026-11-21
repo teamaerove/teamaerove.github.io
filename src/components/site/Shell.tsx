@@ -21,7 +21,6 @@ export const pages = [
   { id: "fleet", label: "Fleet", blurb: "The aircraft we fly" },
   { id: "team", label: "Team", blurb: "45+ minds, one airspace" },
   { id: "achievements", label: "Achievements", blurb: "Proven in competition" },
-  { id: "gallery", label: "Gallery", blurb: "In the field" },
   { id: "contact", label: "Contact", blurb: "Build what flies next" },
 ] as const;
 export type PageId = (typeof pages)[number]["id"];
@@ -137,14 +136,14 @@ export function SectionHead({ index, kicker, title, children }: { index: string;
 /* Inner-page hero ------------------------------------------------------ */
 export function PageHero({ index, kicker, title, lede, image, children }: { index: string; kicker: string; title: ReactNode; lede: string; image?: string; children?: ReactNode }) {
   return (
-    <header className={`page-hero ${image ? "has-image" : ""}`}>
+    <header className="page-hero" data-index={index}>
+      {image && <img className="page-hero-bg" src={image} alt="" fetchPriority="high" />}
       <div className="page-hero-inner">
-        <p className="hero-eyebrow" data-index={index}>{kicker}</p>
+        <p className="hero-eyebrow">{kicker}</p>
         <h1>{title}</h1>
         <p className="page-hero-lede">{lede}</p>
         {children}
       </div>
-      {image && <div className="page-hero-media"><img src={image} alt="" fetchPriority="high" /></div>}
     </header>
   );
 }
