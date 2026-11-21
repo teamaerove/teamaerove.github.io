@@ -1,4 +1,3 @@
-import { MessageCircle } from "lucide-react";
 import type { ComponentType, SVGProps } from "react";
 import { IconAero, IconDroneMark, IconHexCluster, IconCrew, IconLocation, IconMailWing, IconMechatronics, IconMotion, IconPerception, IconRank, IconTarget, IconTrophy } from "@/components/icons";
 import shot1 from "@/assets/hero-full-squad.jpg";
@@ -274,15 +273,13 @@ export const gallery: GalleryShot[] = [
   { src: galleryCrew, alt: "AeRoVe with fellow competing teams in front of a large aircraft at the airfield", caption: "With fellow teams at the airfield" },
 ];
 
-export const recruitmentHref = "https://chat.whatsapp.com/EcJH1gLSbQH2U02cy7m4Hk";
 
 export const contactRoutes = [
-  { label: "Recruitment", value: "Join our WhatsApp group", href: recruitmentHref, icon: MessageCircle },
   { label: "Sponsorship & partnerships", value: "teamaerove@gmail.com", href: "mailto:teamaerove@gmail.com", icon: IconMailWing },
   { label: "Find us", value: "Desai Sethi School of Entrepreneurship, IIT Bombay", href: "https://maps.google.com/?q=Desai+Sethi+School+of+Entrepreneurship+IIT+Bombay", icon: IconLocation },
 ];
 
-export const enquiryTags = ["Sponsorship", "Technology collaboration", "Campus visit", "Media & press", "Recruitment"];
+export const enquiryTags = ["Sponsorship", "Technology collaboration", "Campus visit", "Media & press"];
 export const stats: [string, string, IconType][] = [["04", "Subsystems", IconHexCluster], ["45+", "Members", IconCrew], ["05", "Global titles", IconTrophy], ["#4", "World rank", IconRank]];
 
 export const fleet: (Shot & { name: string; kind: string; text: string })[] = [

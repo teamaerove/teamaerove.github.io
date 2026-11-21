@@ -1,10 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Instagram, Linkedin, MessageCircle, Search } from "lucide-react";
+import { Instagram, Linkedin, Search } from "lucide-react";
 import { useMemo, useState } from "react";
 
-import { IconArrowOut } from "@/components/icons";
 import { NextPage, PageHero, Shell, delay, initials, useReveal } from "@/components/site/Shell";
-import { groups, photoFor, recruitmentHref } from "@/lib/siteData";
+import { groups, photoFor } from "@/lib/siteData";
 import heroImg from "@/assets/hero-full-squad.jpg";
 
 export const Route = createFileRoute("/team")({
@@ -75,12 +74,6 @@ function Team() {
             </div>
           </div>
         ))}
-
-        <a className="wide-cta reveal" href={recruitmentHref} target="_blank" rel="noreferrer">
-          <span className="wide-cta-icon"><MessageCircle /></span>
-          <span><strong>Want to fly with us?</strong><small>Join the AeRoVe recruitment group on WhatsApp</small></span>
-          <IconArrowOut className="wide-cta-arrow" />
-        </a>
       </section>
 
       <NextPage current="team" />

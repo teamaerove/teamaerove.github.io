@@ -2,7 +2,7 @@ import { ChevronLeft, ChevronRight, Instagram, Linkedin, Menu, X } from "lucide-
 import { useCallback, useEffect, useState, type CSSProperties, type ReactNode } from "react";
 
 import { IconArrowOut, IconChevronUp, IconZoom } from "@/components/icons";
-import { recruitmentHref, type Shot } from "@/lib/siteData";
+import type { Shot } from "@/lib/siteData";
 import aeroveLogo from "@/assets/aerove-logo.png";
 import umicLogo from "@/assets/umic-logo.png";
 import iitbLogo from "@/assets/iitb-logo.svg";
@@ -200,7 +200,7 @@ export function Shell({ current, children, overlayNav = false }: { current: Page
           {pages.slice(1).map((p) => <a key={p.id} href={href(p.id)} className={current === p.id ? "is-current" : ""} aria-current={current === p.id ? "page" : undefined}>{p.label}</a>)}
         </div>
         <div className="nav-end">
-          <a className="btn btn-primary nav-cta" href={recruitmentHref} target="_blank" rel="noreferrer">Join the team</a>
+          <a className="btn btn-primary nav-cta" href={href("contact")}>Contact us</a>
           <img className="nav-iitb" src={iitbLogo} alt="IIT Bombay" />
           <button type="button" className="icon-btn menu-button" aria-label={menuOpen ? "Close navigation" : "Open navigation"} aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}>{menuOpen ? <X /> : <Menu />}</button>
         </div>
@@ -232,7 +232,6 @@ export function Shell({ current, children, overlayNav = false }: { current: Page
           <div className="footer-col">
             <h3>Team</h3>
             {pages.slice(4).map((p) => <a key={p.id} href={href(p.id)}>{p.label}</a>)}
-            <a href={recruitmentHref} target="_blank" rel="noreferrer">Recruitment</a>
           </div>
           <div className="footer-col">
             <h3>Reach us</h3>

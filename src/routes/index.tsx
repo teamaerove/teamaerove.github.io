@@ -1,10 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { MessageCircle } from "lucide-react";
 
-import { IconArrowOut, IconLayers, IconTarget, IconTrophy } from "@/components/icons";
-import { CineHero } from "@/components/site/CineHero";
+import { IconArrowOut } from "@/components/icons";
+import { DroneVision } from "@/components/site/DroneVision";
 import { CountUp, SectionHead, Shell, delay, href, useInView, useReveal } from "@/components/site/Shell";
-import { achievements, architecture, recruitmentHref, slugOf, stats } from "@/lib/siteData";
+import { achievements, architecture, slugOf, stats } from "@/lib/siteData";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -20,81 +19,88 @@ export const Route = createFileRoute("/")({
   component: Home,
 });
 
+const year = (title: string) => title.match(/\d{4}/)?.[0] ?? "";
+const eventName = (title: string) => title.replace(/\s*\d{4}$/, "");
+
 function Home() {
   useReveal();
-  const [statsRef, statsSeen] = useInView<HTMLDivElement>();
+  const [statsRef, statsSeen] = useInView<HTMLDListElement>();
 
   return (
     <Shell current="" overlayNav>
-      <CineHero />
-
-      <section className="band stats-band">
-        <div ref={statsRef} className="stats-row">
-          {stats.map(([n, l, Icon], i) => (
-            <div key={l} className="stat reveal" style={delay(i * 80)}>
-              <Icon className="stat-icon" />
-              <div><strong><CountUp value={n} start={statsSeen} /></strong><span>{l}</span></div>
-            </div>
-          ))}
+      <header className="hero">
+        <div className="hero-copy">
+          <h1>Team AeRoVe</h1>
+          <p className="hero-sub">Aerial Robotics Vehicles · UMIC, IIT Bombay</p>
+          <p className="hero-lede">We are a student team that designs, builds and flies autonomous drones, from the airframe and flight controller to the onboard vision, and takes them to international competitions.</p>
+          <div className="hero-actions">
+            <a className="btn btn-primary" href={href("systems")}>See our work<IconArrowOut /></a>
+            <a className="btn btn-ghost" href={href("contact")}>Contact us</a>
+          </div>
+          <a className="hero-blueprint" href={href("blueprint")}>Explore a drone in 3D<IconArrowOut /></a>
         </div>
+        <DroneVision />
+      </header>
+
+      <section className="band figures-band">
+        <dl ref={statsRef} className="figures">
+          {stats.map(([n, l]) => (
+            <div key={l}><dt>{l}</dt><dd><CountUp value={n} start={statsSeen} /></dd></div>
+          ))}
+        </dl>
       </section>
 
-      <section className="band motto">
+      <section className="band">
         <div className="motto-grid">
           <div className="reveal">
             <p className="kicker">Our motto</p>
             <h2 className="motto-quote">“A drone is often preferred for missions that are too <em>dull, dirty, or dangerous</em> for manned aircraft.”</h2>
           </div>
           <div className="reveal">
-            <p className="lede">Team AeRoVe of UMIC is on a never-ending pursuit of developing an ultimate system of autonomous fixed-wing as well as multirotor aircraft. Incorporating Mechatronics, Aerodynamics, Motion Path &amp; Controlling, Machine Learning and Perception, the team covers every aspect of a complete autonomous aerial vehicle.</p>
-            <p className="lede">Our purpose is to push the boundaries of autonomous aerial technology through indigenous innovation — long-distance outdoor navigation, manipulation of large objects, interaction with moving frames of reference and 100% onboard computation.</p>
+            <p className="lede">Team AeRoVe of UMIC works on autonomous fixed-wing and multirotor aircraft. With subsystems for Mechatronics, Aerodynamics, Motion Path &amp; Controlling and Perception, the team covers every part of a complete autonomous aerial vehicle.</p>
+            <p className="lede">Our focus areas are long-distance outdoor navigation, handling large payloads, interacting with moving frames of reference, and running every computation on board.</p>
           </div>
-        </div>
-        <div className="principles">
-          <article className="reveal"><IconTarget className="principle-icon" /><span>Mission</span><h3>Indigenous systems for fully autonomous flight.</h3></article>
-          <article className="reveal" style={delay(90)}><IconLayers className="principle-icon" /><span>Approach</span><h3>Mechanics, airflow, control and vision as one aircraft.</h3></article>
         </div>
       </section>
 
       <section className="band">
-        <SectionHead index="02" kicker="System architecture" title={<>Four subsystems.{" "}One aircraft.</>}>
+        <SectionHead index="02" kicker="What we work on" title="Four subsystems, one aircraft">
           <a className="text-link" href={href("systems")}>All systems<IconArrowOut /></a>
         </SectionHead>
         <div className="sys-teaser">
           {architecture.map((s, i) => (
-            <a key={s.name} className="sys-tile reveal" style={delay(i * 70)} href={`${href("systems")}#${slugOf(s.name)}`}>
+            <a key={s.name} className="sys-tile reveal" style={delay(i * 60)} href={`${href("systems")}#${slugOf(s.name)}`}>
               <img src={s.gallery[0]!.src} alt={s.gallery[0]!.alt} loading="lazy" />
-              <span className="sys-tile-index">0{i + 1}</span>
-              <span className="sys-tile-badge"><s.icon /></span>
-              <span className="sys-tile-copy"><small>{s.kicker}</small><strong>{s.name}</strong></span>
-              <IconArrowOut className="sys-tile-arrow" />
+              <span className="sys-tile-copy"><strong>{s.name}</strong><small>{s.kicker}</small></span>
             </a>
           ))}
         </div>
       </section>
 
-      <section className="band record">
-        <SectionHead index="03" kicker="World stage" title={<>Proven in{" "}competition.</>}>
+      <section className="band">
+        <SectionHead index="03" kicker="Competitions" title="Recent results">
           <a className="text-link" href={href("achievements")}>Full record<IconArrowOut /></a>
         </SectionHead>
-        <div className="marquee" aria-label="Competition record">
-          <div className="marquee-track">
-            {[...achievements, ...achievements].map((a, i) => (
-              <a key={i} className="marquee-item" href={href("achievements")} aria-hidden={i >= achievements.length ? true : undefined} tabIndex={i >= achievements.length ? -1 : undefined}>
-                <img src={a.photo} alt="" loading="lazy" />
-                <span><IconTrophy /><b>{a.rank}</b>{a.title}</span>
-              </a>
-            ))}
-          </div>
-        </div>
+        <ol className="results reveal">
+          {achievements.map((a) => (
+            <li key={a.title}>
+              <span className="results-year">{year(a.title)}</span>
+              <strong>{eventName(a.title)}</strong>
+              <span className="results-rank">{a.rank}</span>
+              <span className="results-detail">{a.detail}</span>
+            </li>
+          ))}
+        </ol>
       </section>
 
       <section className="band">
-        <a className="mega-cta reveal" href={recruitmentHref} target="_blank" rel="noreferrer">
-          <span className="kicker"><span>04</span>Recruitment</span>
-          <strong>Want to fly{" "}with us?</strong>
-          <span className="mega-cta-sub"><MessageCircle />Join the AeRoVe recruitment group on WhatsApp<IconArrowOut /></span>
-        </a>
+        <div className="closing reveal">
+          <div>
+            <h2>Work with us</h2>
+            <p>We partner with sponsors, labs and companies on hardware, testing and research. Write to <a href="mailto:teamaerove@gmail.com">teamaerove@gmail.com</a>.</p>
+          </div>
+          <a className="btn btn-primary" href={href("contact")}>Get in touch<IconArrowOut /></a>
+        </div>
       </section>
     </Shell>
   );
